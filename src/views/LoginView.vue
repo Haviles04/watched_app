@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import loginVideo from "../assets/loginVideo.mp4";
 import watchedLogo from "../assets/watchedLogo.png";
@@ -10,10 +10,6 @@ const userStore = useUserStore();
 const { loading, user, errorMessage } = storeToRefs(userStore);
 const isSignup = ref(false);
 const router = useRouter();
-
-// if (user) {
-//   router.push("/");
-// }
 
 const userCredentials = reactive({
   email: "",
@@ -27,6 +23,15 @@ const displaySignUp = (): void => {
 
 const handleSubmit = async (e: Event) => {
   e.preventDefault();
+
+  if (!isSignup.value) {
+    await userStore.handleLogin({
+      email: userCredentials.email,
+      password: userCredentials.password,
+      userName: userCredentials.userName,
+    });
+    return;
+  }
 
   await userStore.handleSignup({
     email: userCredentials.email,

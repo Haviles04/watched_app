@@ -1,6 +1,7 @@
 import { ref, reactive } from "vue";
 import { defineStore } from "pinia";
 import { supabase } from "../supabase";
+import { useRouter } from "vue-router";
 
 export const useUserStore = defineStore("users", () => {
   interface UserSignupLogin {
@@ -16,6 +17,7 @@ export const useUserStore = defineStore("users", () => {
     userName?: string;
   }
 
+  const router = useRouter();
   const user = ref<User>();
   const errorMessage = ref<string>("");
   const loading = ref(false);
@@ -76,13 +78,14 @@ export const useUserStore = defineStore("users", () => {
     };
 
     loading.value = false;
+    errorMessage.value = "";
+    router.push("/");
   };
 
-  const handleLogin = async (
-    email: string,
-    password: string,
-    userName: string
-  ) => {
+  const handleLogin = async (credentials: UserSignupLogin) => {
+    console.log("hi");
+    const { email, password, userName } = credentials;
+
     if (!validateEmail(email)) {
       return (errorMessage.value = "Please enter a valid Email");
     }
@@ -116,6 +119,7 @@ export const useUserStore = defineStore("users", () => {
 
     loading.value = false;
     errorMessage.value = "";
+    router.push("/");
   };
 
   const getUser = async () => {
@@ -126,7 +130,7 @@ export const useUserStore = defineStore("users", () => {
       loading.value = false;
       return (user.value = undefined);
     }
-
+    console.log(loggedInUser);
     const { data: userWithEmail } = await supabase
       .from("users")
       .select()

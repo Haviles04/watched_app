@@ -10,7 +10,7 @@ const { user } = defineProps(["user"]);
           <v-list-item
             prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
             :title="user.userName"
-            :subtitle="user.Email"
+            :subtitle="user.email"
           ></v-list-item>
         </v-list>
 

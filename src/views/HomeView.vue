@@ -7,12 +7,7 @@ import { storeToRefs } from "pinia";
 const router = useRouter();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-
-onMounted(() => {
-  if (!user.value) {
-    router.push("/login");
-  }
-});
+console.log(user.value);
 </script>
 
 <template>home</template>
