@@ -29,6 +29,7 @@ const handleLogout = () => {
         @click="rail = false"
       >
         <v-list-item
+          class="user"
           :prepend-avatar="photo"
           prepend-icon="mdi-account-badge"
           :title="user?.userName"
@@ -73,7 +74,6 @@ const handleLogout = () => {
           </div>
         </v-list>
       </v-navigation-drawer>
-      <v-main class="main"><slot></slot></v-main>
     </v-layout>
   </v-card>
 </template>
@@ -82,12 +82,5 @@ const handleLogout = () => {
 .main {
   background-color: #1b263b;
   min-height: 100vh;
-}
-
-.nav {
-  height: 95vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 </style>

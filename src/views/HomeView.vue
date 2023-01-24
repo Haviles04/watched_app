@@ -11,8 +11,6 @@ const { user } = storeToRefs(userStore);
 console.log(user);
 </script>
 
-<template>
-  <div>hi</div>
-</template>
+<template></template>
 
 <style scoped></style>

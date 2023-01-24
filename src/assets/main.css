@@ -5,6 +5,10 @@
   padding: 0;
 }
 
+html {
+  overflow-y: auto !important;
+}
+
 .color1 {
   color: #0d1b2a;
 }
