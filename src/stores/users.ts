@@ -8,13 +8,14 @@ export const useUserStore = defineStore("users", () => {
     id?: number;
     email: string;
     password: string;
-    userName: string;
+    userName?: string;
   }
 
   interface User {
     id?: number;
     email?: string;
     userName?: string;
+    photo?: string;
   }
 
   const router = useRouter();
@@ -48,7 +49,7 @@ export const useUserStore = defineStore("users", () => {
     const { data: userNameTaken } = await supabase
       .from("users")
       .select()
-      .eq("userName", userName)
+      .eq("username", userName)
       .single();
 
     if (userNameTaken) {
@@ -63,7 +64,7 @@ export const useUserStore = defineStore("users", () => {
       return (errorMessage.value = error.message);
     }
 
-    await supabase.from("users").insert({ userName, email });
+    await supabase.from("users").insert({ username: userName, email });
 
     const { data: newUser } = await supabase
       .from("users")
@@ -74,7 +75,7 @@ export const useUserStore = defineStore("users", () => {
     user.value = {
       id: newUser.id,
       email: newUser.email,
-      userName: newUser.userName,
+      userName: newUser.username,
     };
 
     loading.value = false;
@@ -83,7 +84,6 @@ export const useUserStore = defineStore("users", () => {
   };
 
   const handleLogin = async (credentials: UserSignupLogin) => {
-    console.log("hi");
     const { email, password, userName } = credentials;
 
     if (!validateEmail(email)) {
@@ -100,21 +100,27 @@ export const useUserStore = defineStore("users", () => {
       password,
     });
 
+    console.log(error);
+
     if (error) {
       loading.value = false;
       errorMessage.value = error.message;
+      return;
     }
 
     const { data: exisitingUser } = await supabase
       .from("users")
       .select()
-      .eq("userName", userName)
+      .eq("email", email)
       .single();
+
+    console.log(exisitingUser);
 
     user.value = {
       id: exisitingUser.id,
       email: exisitingUser.email,
-      userName: exisitingUser.userName,
+      userName: exisitingUser.username,
+      photo: exisitingUser.photo,
     };
 
     loading.value = false;
@@ -130,7 +136,7 @@ export const useUserStore = defineStore("users", () => {
       loading.value = false;
       return (user.value = undefined);
     }
-    console.log(loggedInUser);
+
     const { data: userWithEmail } = await supabase
       .from("users")
       .select()
@@ -139,14 +145,26 @@ export const useUserStore = defineStore("users", () => {
 
     user.value = {
       id: userWithEmail.id,
-      userName: userWithEmail.userName,
+      userName: userWithEmail.username,
       email: userWithEmail.email,
+      photo: userWithEmail.photo,
     };
+    loading.value = false;
+    return true;
+  };
+
+  const handleLogout = async () => {
+    loading.value = true;
+    await supabase.auth.signOut();
+    user.value = undefined;
+    router.push("/login");
+    loading.value = false;
   };
 
   return {
     handleSignup,
     handleLogin,
+    handleLogout,
     getUser,
     loading,
     errorMessage,

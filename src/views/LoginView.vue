@@ -26,15 +26,14 @@ const handleSubmit = async (e: Event) => {
 
   if (!isSignup.value) {
     await userStore.handleLogin({
-      email: userCredentials.email,
+      email: userCredentials.email.toLowerCase(),
       password: userCredentials.password,
-      userName: userCredentials.userName,
     });
     return;
   }
 
   await userStore.handleSignup({
-    email: userCredentials.email,
+    email: userCredentials.email.toLowerCase(),
     password: userCredentials.password,
     userName: userCredentials.userName,
   });
