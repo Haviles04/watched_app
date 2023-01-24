@@ -3,7 +3,7 @@ import { onBeforeMount, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { RouterView, useRouter } from "vue-router";
 import { useUserStore } from "./stores/users";
-import Navbar from "./components/Navbar.vue";
+import Navbar from "./components/NavBar.vue";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -21,7 +21,6 @@ onBeforeMount(async () => {
   <main v-if="!loading">
     <div v-if="user">
       <Navbar />
-      <RouterView />
     </div>
     <div v-else>
       <RouterView />

@@ -11,6 +11,10 @@ const { user } = storeToRefs(userStore);
 console.log(user);
 </script>
 
-<template></template>
+<template><p></p></template>
 
-<style scoped></style>
+<style scoped>
+p {
+  color: white;
+}
+</style>

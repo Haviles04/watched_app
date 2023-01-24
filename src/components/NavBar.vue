@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { RouterView, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
 import blank from "../assets/blank.jpg";
@@ -7,7 +8,7 @@ const { VITE_USERPHOTO_URL } = import.meta.env;
 
 const drawer = ref(true);
 const rail = ref(true);
-
+const router = useRouter();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const photo = user.value?.photo
@@ -52,6 +53,7 @@ const handleLogout = () => {
               prepend-icon="mdi-timeline"
               title="Timeline"
               value="Timeline"
+              @click="router.push('/')"
             ></v-list-item>
             <v-list-item
               prepend-icon="mdi-movie-open-plus"
@@ -62,6 +64,7 @@ const handleLogout = () => {
               prepend-icon="mdi-movie-search"
               title="Find Something To Watch"
               value="Find Something To Watch"
+              @click="router.push('/find')"
             ></v-list-item>
           </div>
           <div>
@@ -74,6 +77,7 @@ const handleLogout = () => {
           </div>
         </v-list>
       </v-navigation-drawer>
+      <v-main class="main"><RouterView /> </v-main>
     </v-layout>
   </v-card>
 </template>
