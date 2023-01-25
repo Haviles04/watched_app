@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import { ref, reactive, onBeforeMount } from "vue";
-import { useRouter } from "vue-router";
-import loginVideo from "../assets/loginVideo.mp4";
-import watchedLogo from "../assets/watchedLogo.png";
-import { useUserStore } from "../stores/users";
+import { ref, reactive } from "vue";
+import loginVideo from "@/assets/loginVideo.mp4";
+import watchedLogo from "@/assets/watchedLogo.png";
+import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
 
 const userStore = useUserStore();
-const { loading, user, errorMessage } = storeToRefs(userStore);
+const { loading, errorMessage } = storeToRefs(userStore);
 const isSignup = ref(false);
-const router = useRouter();
 
-const userCredentials = reactive({
+interface userCredentials {
+  email: string;
+  password: string;
+  userName?: string;
+}
+
+const userCredentials = reactive<userCredentials>({
   email: "",
   password: "",
   userName: "",

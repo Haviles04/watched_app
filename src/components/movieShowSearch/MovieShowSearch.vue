@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ResultsCard from "./ResultsCard.vue";
 import { ref } from "vue";
-import placeHolder from "../../assets/placeholderImg.png";
+import placeHolder from "@/assets/placeholderImg.png";
 
 const { VITE_MOVIEDB_API_KEY } = import.meta.env;
 
@@ -9,7 +9,7 @@ const searchTerm = ref<string>("");
 const searchedItems = ref<any[]>();
 let searchTimeout: any;
 
-const handleChange = () => {
+const handleChange = (): void => {
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
     fetchData();
@@ -23,7 +23,6 @@ const fetchData = async () => {
     .then((r) => r.json())
     .catch((err) => console.log(err));
   searchedItems.value = data.results;
-  console.log(data.results);
 };
 </script>
 
@@ -46,6 +45,8 @@ const fetchData = async () => {
           :title="item.title || item.name"
           :releaseDate="item.release_date"
           :overview="item.overview"
+          :id="item.id"
+          :mediaType="item.media_type"
           :image="
             item.poster_path
               ? `https://image.tmdb.org/t/p/w400/${item.poster_path}`

@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia";
 import { RouterView, useRouter } from "vue-router";
 import { useUserStore } from "./stores/users";
 import Navbar from "./components/NavBar.vue";
+import Loading from "./components/Loading.vue";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -27,18 +28,8 @@ onBeforeMount(async () => {
     </div>
   </main>
   <main v-else>
-    <div class="loading">
-      <v-progress-circular indeterminate color="#1b263b"></v-progress-circular>
-    </div>
+    <loading />
   </main>
 </template>
 
-<style scoped>
-.loading {
-  width: 100%;
-  min-height: 500px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-</style>
+<style scoped></style>

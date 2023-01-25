@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { RouterView, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
-import blank from "../assets/blank.jpg";
+import blank from "@/assets/blank.jpg";
 const { VITE_USERPHOTO_URL } = import.meta.env;
 
 const drawer = ref(true);

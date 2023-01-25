@@ -1,9 +1,14 @@
 <script setup lang="ts">
-const { title, releaseDate, overview, image } = defineProps([
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const { title, releaseDate, overview, image, mediaType, id } = defineProps([
   "title",
   "releaseDate",
   "overview",
   "image",
+  "mediaType",
+  "id",
 ]);
 </script>
 
@@ -20,7 +25,9 @@ const { title, releaseDate, overview, image } = defineProps([
     </v-card-text>
 
     <v-card-actions>
-      <v-btn color="white"> Details </v-btn>
+      <v-btn @click="router.push(`/${mediaType}/${id}`)" color="white">
+        Details
+      </v-btn>
 
       <v-btn color="white"> Watched? </v-btn>
     </v-card-actions>
@@ -29,6 +36,7 @@ const { title, releaseDate, overview, image } = defineProps([
 
 <style scoped>
 .card {
+  width: 300px;
   background-color: #415a77;
   display: flex;
   flex-direction: column;
