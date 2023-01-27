@@ -19,7 +19,11 @@ console.log(showDetails);
     <div class="overlay"></div>
     <img :src="detailimage" alt="title" />
     <div class="title">
+      <div>
       <h1>{{ title }}</h1>
+      <p>{{showDetails.tagline}}</p>
+    </div>
+      <button> Add to watched</button>
     </div>
   </div>
 </template>
@@ -41,11 +45,21 @@ h1 {
   border-radius: 20px;
   margin-left: 20px;
   padding: 20px;
-  height: fit-content;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.title h1 {
+.title h1 , p {
   color: white;
+}
+
+.title button {
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .overlay {
