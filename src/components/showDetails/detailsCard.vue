@@ -5,8 +5,6 @@ const detailimage = showDetails.poster_path
   ? `https://image.tmdb.org/t/p/w400/${showDetails.poster_path}`
   : placeHolder;
 const title = showDetails.name || showDetails.title;
-
-console.log(showDetails);
 </script>
 
 <template>
