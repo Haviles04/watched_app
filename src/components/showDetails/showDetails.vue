@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import Loading from "../Loading.vue";
-import DetailsCard from "./detailsCard.vue";
+import DetailsCard from "./DetailsCard.vue";
 
 const { VITE_MOVIEDB_API_KEY } = import.meta.env;
 const route = useRoute();

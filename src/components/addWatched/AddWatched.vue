@@ -8,11 +8,12 @@ import { storeToRefs } from "pinia";
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-const { textColor, id, mediaType, image } = defineProps([
+const { textColor, id, mediaType, image, name } = defineProps([
   "textColor",
   "id",
   "image",
   "mediaType",
+  "name",
 ]);
 
 const emits = defineEmits(["added"]);
@@ -37,6 +38,7 @@ const savePost = async () => {
     owner_id: user.value?.id,
     rating: rating.value,
     media_type: mediaType,
+    name,
   });
 
   if (data) {
