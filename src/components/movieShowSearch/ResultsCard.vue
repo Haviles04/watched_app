@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AddWatched from "../AddWatched.vue";
+import AddWatched from "../addWatched/AddWatched.vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -26,11 +26,21 @@ const { title, releaseDate, overview, image, mediaType, id } = defineProps([
     </v-card-text>
 
     <v-card-actions>
-      <v-btn @click="router.push(`/${mediaType}/${id}`)" color="black">
+      <v-btn
+        class="detailBtn"
+        @click="router.push(`/${mediaType}/${id}`)"
+        color="black"
+      >
         Details
       </v-btn>
 
-      <AddWatched textColor="black" />
+      <AddWatched
+        :id="id"
+        :name="title"
+        :mediaType="mediaType"
+        :image="image"
+        textColor="black"
+      />
     </v-card-actions>
   </v-card>
 </template>
@@ -60,7 +70,7 @@ const { title, releaseDate, overview, image, mediaType, id } = defineProps([
   -webkit-box-orient: vertical;
 }
 
-.button {
-  color: white;
+.detailBtn {
+  margin-top: 25px;
 }
 </style>

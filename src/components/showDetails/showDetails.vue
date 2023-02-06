@@ -3,10 +3,12 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import Loading from "../Loading.vue";
 import DetailsCard from "./detailsCard.vue";
+
 const { VITE_MOVIEDB_API_KEY } = import.meta.env;
 const route = useRoute();
 const { mediaType, id } = route.params;
 const showDetails = ref();
+const showMediaType = ref();
 
 const fetchData = async () => {
   const data = await fetch(
@@ -14,8 +16,7 @@ const fetchData = async () => {
   ).then((r) => r.json());
 
   showDetails.value = data;
-
-  console.log(showDetails);
+  showMediaType.value = mediaType;
 };
 
 onMounted(() => {
@@ -24,6 +25,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <DetailsCard v-if="showDetails" :showDetails="showDetails" />
-  <Loading v-else />
+  <div v-if="showDetails">
+    <DetailsCard :showDetails="showDetails" :mediaType="showMediaType" />
+  </div>
+  <div v-else>
+    <Loading />
+  </div>
 </template>
