@@ -7,8 +7,6 @@ import { storeToRefs } from "pinia";
 const router = useRouter();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-
-console.log(user);
 </script>
 
 <template><p></p></template>

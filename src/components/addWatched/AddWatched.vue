@@ -14,12 +14,12 @@ const { textColor, id, mediaType, image } = defineProps([
   "image",
   "mediaType",
 ]);
+
+const emits = defineEmits(["added"]);
 const dialog = ref<boolean>(false);
 const rating = ref(0);
 const thoughts = ref<string>();
 const loading = ref<boolean>(false);
-
-console.log(mediaType);
 
 const savePost = async () => {
   loading.value = true;
@@ -30,7 +30,7 @@ const savePost = async () => {
     return;
   }
 
-  const result = await supabase.from("post").insert({
+  const { data } = await supabase.from("post").insert({
     show_id: id,
     show_image: image,
     caption: thoughts.value,
@@ -39,7 +39,9 @@ const savePost = async () => {
     media_type: mediaType,
   });
 
-  console.log(result);
+  if (data) {
+    emits("added");
+  }
 
   loading.value = false;
   dialog.value = false;

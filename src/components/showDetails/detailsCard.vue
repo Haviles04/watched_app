@@ -1,12 +1,37 @@
 <script setup lang="ts">
+import { ref, onBeforeMount } from "vue";
+import { supabase } from "@/supabase";
 import placeHolder from "@/assets/placeholderImg.png";
 import AddWatched from "../addWatched/AddWatched.vue";
 import OtherDetails from "./OtherDetails.vue";
+import { useUserStore } from "@/stores/users";
+import { storeToRefs } from "pinia";
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
 const { showDetails, mediaType } = defineProps(["showDetails", "mediaType"]);
 const detailimage = showDetails.poster_path
   ? `https://image.tmdb.org/t/p/w400/${showDetails.poster_path}`
   : placeHolder;
 const title = showDetails.name || showDetails.title;
+
+const watched = ref(true);
+
+const checkIfWatched = async () => {
+  const { data, error } = await supabase
+    .from("post")
+    .select()
+    .eq("owner_id", user.value?.id)
+    .eq("show_id", showDetails.id);
+  if (data && data.length > 0) {
+    watched.value = true;
+  } else {
+    watched.value = false;
+  }
+};
+
+onBeforeMount(() => checkIfWatched());
 </script>
 
 <template>
@@ -26,6 +51,7 @@ const title = showDetails.name || showDetails.title;
           <h3>Overview</h3>
           <p>{{ showDetails.overview }}</p>
           <AddWatched
+            v-if="!watched"
             :id="showDetails.id"
             :name="title"
             :image="detailimage"
@@ -40,6 +66,7 @@ const title = showDetails.name || showDetails.title;
     <h3>Overview</h3>
     <p>{{ showDetails.overview }}</p>
     <AddWatched
+      v-if="!watched"
       :id="showDetails.id"
       :name="title"
       :mediaType="showDetails.media_type"

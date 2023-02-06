@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ResultsCard from "./ResultsCard.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import placeHolder from "@/assets/placeholderImg.png";
 
 const { VITE_MOVIEDB_API_KEY } = import.meta.env;
@@ -12,11 +12,16 @@ let searchTimeout: any;
 const handleChange = (): void => {
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
+    searchedItems.value = [];
     fetchData();
   }, 300);
 };
 
 const fetchData = async () => {
+  if (searchTerm && searchTerm.value.length > 0) {
+    return;
+  }
+
   const data = await fetch(
     `https://api.themoviedb.org/3/search/multi?api_key=${VITE_MOVIEDB_API_KEY}&language=en-US&query=${searchTerm.value}&page=1&include_adult=false`
   )

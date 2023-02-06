@@ -1,6 +1,13 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
 import AddWatched from "../addWatched/AddWatched.vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/users";
+import { storeToRefs } from "pinia";
+import { supabase } from "@/supabase";
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 const router = useRouter();
 const { title, releaseDate, overview, image, mediaType, id } = defineProps([
@@ -11,6 +18,22 @@ const { title, releaseDate, overview, image, mediaType, id } = defineProps([
   "mediaType",
   "id",
 ]);
+
+const watched = ref();
+
+const checkIfWatched = async () => {
+  const { data, error } = await supabase
+    .from("post")
+    .select()
+    .eq("owner_id", user.value?.id)
+    .eq("show_id", id);
+
+  if (data && data.length > 0) {
+    watched.value = true;
+  }
+};
+
+onMounted(() => checkIfWatched());
 </script>
 
 <template>
@@ -40,7 +63,9 @@ const { title, releaseDate, overview, image, mediaType, id } = defineProps([
         :mediaType="mediaType"
         :image="image"
         textColor="black"
+        v-if="!watched"
       />
+      <p v-else>Watched!</p>
     </v-card-actions>
   </v-card>
 </template>
