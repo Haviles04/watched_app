@@ -3,6 +3,7 @@ import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import FindView from "@/views/FindView.vue";
 import ShowDetailsView from "@/views/ShowDetailsView.vue";
+import newWatchedView from "@/views/NewWatchedView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: "/:mediaType/:id",
       name: "showDetails",
       component: ShowDetailsView,
+    },
+    {
+      path: "/newwatched",
+      name: "newWatched",
+      component: newWatchedView,
     },
   ],
 });

@@ -14,6 +14,8 @@ const fetchData = async () => {
   ).then((r) => r.json());
 
   showDetails.value = data;
+
+  console.log(showDetails);
 };
 
 onMounted(() => {

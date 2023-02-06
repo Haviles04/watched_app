@@ -25,11 +25,11 @@ const { title, releaseDate, overview, image, mediaType, id } = defineProps([
     </v-card-text>
 
     <v-card-actions>
-      <v-btn @click="router.push(`/${mediaType}/${id}`)" color="white">
+      <v-btn @click="router.push(`/${mediaType}/${id}`)" color="black">
         Details
       </v-btn>
 
-      <v-btn color="white"> Watched? </v-btn>
+      <v-btn color="black"> Watched? </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -37,14 +37,14 @@ const { title, releaseDate, overview, image, mediaType, id } = defineProps([
 <style scoped>
 .card {
   width: 300px;
-  background-color: #415a77;
+  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .card h1 {
-  color: white;
+  color: #415a77;
   margin-bottom: 10px;
   line-height: 1.7rem;
 }

@@ -38,6 +38,7 @@ const checkIsOnMobile = () => {
   <v-card>
     <v-layout>
       <v-navigation-drawer
+        class="drawer"
         v-model="drawer"
         :rail="rail"
         permanent
@@ -74,6 +75,7 @@ const checkIsOnMobile = () => {
               prepend-icon="mdi-movie-open-plus"
               title="Add Watched"
               value="Add Watched"
+              @click="router.push('/newwatched')"
             ></v-list-item>
             <v-list-item
               prepend-icon="mdi-movie-search"
@@ -99,7 +101,11 @@ const checkIsOnMobile = () => {
 
 <style scoped>
 .main {
-  background-color: #1b263b;
+  background-color: rgb(231, 230, 230);
   min-height: 100vh;
+}
+
+.drawer {
+  background-color: black;
 }
 </style>

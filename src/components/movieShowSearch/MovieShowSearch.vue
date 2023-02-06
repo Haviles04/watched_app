@@ -68,7 +68,7 @@ const fetchData = async () => {
 
 .findContainer h1 {
   margin-top: 20px;
-  color: white;
+  color: #415a77;
 }
 
 .cardContainer {
@@ -79,6 +79,7 @@ const fetchData = async () => {
 
 .card {
   margin: 20px;
+  box-shadow: 5px 5px 5px #778da9;
 }
 
 .searchBar {
