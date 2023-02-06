@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import placeHolder from "@/assets/placeholderImg.png";
+import AddWatched from "../AddWatched.vue";
 const { showDetails } = defineProps(["showDetails"]);
 const detailimage = showDetails.poster_path
   ? `https://image.tmdb.org/t/p/w400/${showDetails.poster_path}`
@@ -23,7 +24,9 @@ const title = showDetails.name || showDetails.title;
         <div class="mainView">
           <h3>Overview</h3>
           <p>{{ showDetails.overview }}</p>
-          <button>Add to watched</button>
+          <div class="addBtn">
+            <AddWatched textColor="white" />
+          </div>
         </div>
       </div>
     </div>
@@ -31,7 +34,9 @@ const title = showDetails.name || showDetails.title;
   <div class="mobileView">
     <h3>Overview</h3>
     <p>{{ showDetails.overview }}</p>
-    <button>Add to watched</button>
+    <div class="addBtn">
+      <AddWatched textColor="white" />
+    </div>
   </div>
   <div class="detailContainer">
     <div class="detailItem" v-if="showDetails.networks">
@@ -95,23 +100,17 @@ p {
 
 .mainView {
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 .mainView h3 {
   margin-top: 10px;
 }
 
-.mobileView {
-  display: none;
+.addBtn {
+  margin-top: 20px;
 }
 
-.mainView button {
-  background-color: white;
-  padding: 10px;
-  border-radius: 5px;
-  max-width: 200px;
+.mobileView {
+  display: none;
 }
 
 .overlay {

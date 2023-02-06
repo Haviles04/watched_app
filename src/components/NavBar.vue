@@ -30,7 +30,7 @@ onUnmounted(() => {
 });
 
 const checkIsOnMobile = () => {
-  isMobile.value = window.matchMedia("(max-width: 600px)");
+  isMobile.value = window.matchMedia("(max-width: 625px)");
 };
 </script>
 
@@ -72,15 +72,9 @@ const checkIsOnMobile = () => {
               @click="router.push('/')"
             ></v-list-item>
             <v-list-item
-              prepend-icon="mdi-movie-open-plus"
-              title="Add Watched"
-              value="Add Watched"
-              @click="router.push('/newwatched')"
-            ></v-list-item>
-            <v-list-item
               prepend-icon="mdi-movie-search"
-              title="Find Something To Watch"
-              value="Find Something To Watch"
+              title="Search"
+              value="search"
               @click="router.push('/find')"
             ></v-list-item>
           </div>
