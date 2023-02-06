@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { RouterView, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
@@ -8,9 +8,11 @@ const { VITE_USERPHOTO_URL } = import.meta.env;
 
 const drawer = ref(true);
 const rail = ref(true);
+const isMobile = ref(window.matchMedia("(max-width: 600px)"));
 const router = useRouter();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
+
 const photo = user.value?.photo
   ? `${VITE_USERPHOTO_URL}${user.value.photo}`
   : blank;
@@ -18,9 +20,21 @@ const photo = user.value?.photo
 const handleLogout = () => {
   userStore.handleLogout();
 };
+
+onMounted(() => {
+  window.addEventListener("resize", checkIsOnMobile);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", checkIsOnMobile);
+});
+
+const checkIsOnMobile = () => {
+  isMobile.value = window.matchMedia("(max-width: 600px)");
+};
 </script>
 
-<template>
+<template :onresize="checkIsOnMobile">
   <v-card>
     <v-layout>
       <v-navigation-drawer
@@ -28,6 +42,7 @@ const handleLogout = () => {
         :rail="rail"
         permanent
         @click="rail = false"
+        :location="isMobile.matches ? 'bottom' : 'left'"
       >
         <v-list-item
           class="user"
