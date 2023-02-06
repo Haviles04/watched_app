@@ -65,7 +65,7 @@ onMounted(() => checkIfWatched());
         textColor="black"
         v-if="!watched"
       />
-      <p v-else>Watched!</p>
+      <p v-else class="alreadyWatched">Watched!</p>
     </v-card-actions>
   </v-card>
 </template>
@@ -97,5 +97,10 @@ onMounted(() => checkIfWatched());
 
 .detailBtn {
   margin-top: 25px;
+}
+
+.alreadyWatched {
+  margin-top: 25px;
+  margin-left: 10px;
 }
 </style>

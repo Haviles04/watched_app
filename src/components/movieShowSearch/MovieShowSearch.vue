@@ -18,7 +18,7 @@ const handleChange = (): void => {
 };
 
 const fetchData = async () => {
-  if (searchTerm && searchTerm.value.length > 0) {
+  if (searchTerm.value.length < 1) {
     return;
   }
 
