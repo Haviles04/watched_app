@@ -10,14 +10,18 @@ const trendingTv = ref();
 const fetchMovies = async () => {
   const { results } = await fetch(
     `https://api.themoviedb.org/3/trending/movie/day?api_key=${VITE_MOVIEDB_API_KEY}`
-  ).then((r) => r.json());
+  )
+    .then((r) => r.json())
+    .catch((err) => console.log(err));
   trendingMovies.value = results.slice(0, 6);
 };
 
 const fetchTv = async () => {
   const { results } = await fetch(
     `https://api.themoviedb.org/3/trending/tv/day?api_key=${VITE_MOVIEDB_API_KEY}`
-  ).then((r) => r.json());
+  )
+    .then((r) => r.json())
+    .catch((err) => console.log(err));
   trendingTv.value = results.slice(0, 6);
   console.log(trendingTv.value);
 };
