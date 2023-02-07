@@ -21,7 +21,7 @@ const { cast } = defineProps(["cast"]);
   align-items: center;
   flex-direction: column;
   margin: 20px auto;
-  background-color: #778da9;
+  background-color: #374a63;
   padding: 1rem;
   border-radius: 1rem;
   box-shadow: 5px 5px 10px #778da9;
@@ -30,7 +30,9 @@ const { cast } = defineProps(["cast"]);
 
 .memberContainer {
   display: flex;
+  justify-content: center;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 .castMember {
   display: flex;
