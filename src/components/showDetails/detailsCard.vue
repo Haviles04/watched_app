@@ -6,11 +6,16 @@ import AddWatched from "../addWatched/AddWatched.vue";
 import OtherDetails from "./OtherDetails.vue";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
+import CastDetails from "./CastDetails.vue";
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-const { showDetails, mediaType } = defineProps(["showDetails", "mediaType"]);
+const { showDetails, mediaType, cast } = defineProps([
+  "showDetails",
+  "mediaType",
+  "cast",
+]);
 const detailimage = showDetails.poster_path
   ? `https://image.tmdb.org/t/p/w400/${showDetails.poster_path}`
   : placeHolder;
@@ -74,6 +79,7 @@ onBeforeMount(() => checkIfWatched());
       textColor="white"
     />
   </div>
+  <CastDetails :cast="cast" v-if="cast" />
   <OtherDetails :showDetails="showDetails" />
 </template>
 

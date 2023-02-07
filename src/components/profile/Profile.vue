@@ -21,7 +21,7 @@ const getPost = async () => {
     .select()
     .eq("owner_id", userData.id);
   console.log(postData);
-  posts.value = postData;
+  posts.value = postData?.reverse();
 };
 
 onMounted(() => getPost());

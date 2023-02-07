@@ -49,6 +49,7 @@ const checkIsOnMobile = () => {
           class="user"
           :prepend-avatar="photo"
           prepend-icon="mdi-account-badge"
+          @click="router.push(`/users/${user?.userName}`)"
           :title="user?.userName"
           nav
         >

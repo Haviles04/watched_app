@@ -23,7 +23,6 @@ const fetchTv = async () => {
     .then((r) => r.json())
     .catch((err) => console.log(err));
   trendingTv.value = results.slice(0, 6);
-  console.log(trendingTv.value);
 };
 
 onBeforeMount(() => {
@@ -77,5 +76,17 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
+}
+
+@media (max-width: 1020px) {
+  .container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

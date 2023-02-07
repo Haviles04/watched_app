@@ -8,6 +8,17 @@ const { showDetails } = defineProps(["showDetails"]);
       <h3>Where to watch</h3>
       <p v-for="network in showDetails.networks">{{ network.name }}</p>
     </div>
+
+    <div class="detailItem" v-if="showDetails.budget">
+      <h3>Budget</h3>
+      <p>${{ showDetails.budget.toLocaleString() }}</p>
+    </div>
+
+    <div class="detailItem" v-if="showDetails.release_date">
+      <h3>Release Date</h3>
+      <p>{{ showDetails.release_date }}</p>
+    </div>
+
     <div class="detailItem" v-if="showDetails.created_by">
       <h3>Created By:</h3>
       <p v-for="person in showDetails.created_by">{{ person.name }}</p>
@@ -20,7 +31,18 @@ const { showDetails } = defineProps(["showDetails"]);
       </p>
     </div>
 
-    <div class="detailItem" v-if="showDetails.homepage">
+    <div class="detailItem" v-if="showDetails.genres">
+      <h3>Genres</h3>
+      <ul>
+        <li v-for="genre in showDetails.genres">{{ genre.name }}</li>
+      </ul>
+    </div>
+
+    <div
+      class="detailItem"
+      v-if="showDetails.homepage"
+      style="border-bottom: none"
+    >
       <h3>HomePage</h3>
       <a :href="showDetails.homepage">{{ showDetails.homepage }}</a>
     </div>
@@ -39,6 +61,7 @@ const { showDetails } = defineProps(["showDetails"]);
 
 .detailContainer h3 {
   color: white;
+  text-decoration: underline;
 }
 
 .detailItem {
@@ -55,9 +78,16 @@ const { showDetails } = defineProps(["showDetails"]);
 .detailItem a {
   color: #778da9;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .detailItem a:visited {
   color: #778da9;
+  text-decoration: none;
+}
+
+.detailItem li {
+  list-style-type: none;
+  color: white;
 }
 </style>
