@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
@@ -14,7 +14,9 @@ const { userName } = route.params;
 
 const posts = ref();
 const userImage = ref();
+const pageUser = ref();
 const currentUser = ref(user.value?.userName === userName);
+const following = ref();
 
 const getPost = async () => {
   const { data: userData, error } = await supabase
@@ -31,23 +33,57 @@ const getPost = async () => {
 };
 
 const getUserInfo = async () => {
-  const { data: userData, error } = await supabase
+  const { data: userData } = await supabase
     .from("users")
     .select()
     .eq("username", userName)
     .single();
+  pageUser.value = userData;
 
   userData.photo
     ? (userImage.value = `https://gjbbtnlizfreuapdlysi.supabase.co/storage/v1/object/public/userphotos/${userData.photo}`)
     : (userImage.value = blank);
 };
 
+const followUser = async () => {
+  const { data } = await supabase
+    .from("follower_following")
+    .insert({ follower_id: user.value?.id, following_id: pageUser.value.id });
+
+  following.value = true;
+};
+
+const unFollowUser = async () => {
+  const { data } = await supabase
+    .from("follower_following")
+    .delete()
+    .eq("follower_id", user.value?.id)
+    .eq("following_id", pageUser.value.id);
+
+  following.value = false;
+};
+
+const checkIsFollowing = async () => {
+  const { data, error } = await supabase
+    .from("follower_following")
+    .select()
+    .eq("follower_id", user.value?.id)
+    .eq("following_id", pageUser.value.id)
+    .single();
+
+  if (data) {
+    following.value = true;
+  }
+};
+
+watch(pageUser, () => {
+  checkIsFollowing();
+});
+
 onMounted(() => {
   getPost();
   getUserInfo();
 });
-
-console.log(user);
 </script>
 
 <template>
@@ -58,7 +94,10 @@ console.log(user);
       </div>
       <h1>{{ userName }}</h1>
     </div>
-    <v-btn v-if="!currentUser" class="btn">Follow</v-btn>
+    <v-btn v-if="!currentUser && !following" class="btn" @click="followUser"
+      >Follow</v-btn
+    >
+    <v-btn v-if="following" class="btn" @click="unFollowUser">Unfollow</v-btn>
   </div>
   <div class="watched" v-for="post in posts">
     <img :src="post.show_image" :alt="post.name" />
