@@ -16,7 +16,7 @@ const { textColor, id, mediaType, image, name } = defineProps([
   "name",
 ]);
 
-const emits = defineEmits(["added"]);
+const emit = defineEmits(["setWatched"]);
 const dialog = ref<boolean>(false);
 const rating = ref(0);
 const thoughts = ref<string>();
@@ -27,7 +27,6 @@ const savePost = async () => {
 
   if (!id) {
     loading.value = false;
-    console.log("error");
     return;
   }
 
@@ -41,9 +40,7 @@ const savePost = async () => {
     name,
   });
 
-  if (data) {
-    emits("added");
-  }
+  emit("setWatched");
 
   loading.value = false;
   dialog.value = false;

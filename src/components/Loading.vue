@@ -7,7 +7,6 @@
 <style scoped>
 .loading {
   width: 100%;
-  min-height: 500px;
   display: flex;
   justify-content: center;
   align-items: center;

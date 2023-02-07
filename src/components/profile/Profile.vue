@@ -20,7 +20,6 @@ const getPost = async () => {
     .from("post")
     .select()
     .eq("owner_id", userData.id);
-  console.log(postData);
   posts.value = postData?.reverse();
 };
 

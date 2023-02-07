@@ -74,7 +74,7 @@ const checkIsOnMobile = () => {
             ></v-list-item>
             <v-list-item
               prepend-icon="mdi-movie-search"
-              title="Search"
+              title="Search Media"
               value="search"
               @click="router.push('/find')"
             ></v-list-item>

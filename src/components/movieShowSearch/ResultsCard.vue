@@ -64,6 +64,7 @@ onMounted(() => checkIfWatched());
         :image="image"
         textColor="black"
         v-if="!watched"
+        @setWatched="watched = true"
       />
       <p v-else class="alreadyWatched">Watched!</p>
     </v-card-actions>

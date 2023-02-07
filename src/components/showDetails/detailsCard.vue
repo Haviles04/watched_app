@@ -62,6 +62,7 @@ onBeforeMount(() => checkIfWatched());
             :image="detailimage"
             :mediaType="mediaType"
             textColor="white"
+            @setWatched="watched = true"
           />
         </div>
       </div>

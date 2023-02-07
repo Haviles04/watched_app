@@ -56,7 +56,7 @@ const { showDetails } = defineProps(["showDetails"]);
   background-color: #0d1b2a;
   padding: 1rem;
   border-radius: 1rem;
-  box-shadow: 5px 5px 10px #778da9;
+  box-shadow: 10px 10px 10px #778da9;
 }
 
 .detailContainer h3 {
