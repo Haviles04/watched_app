@@ -2,6 +2,7 @@
 import ResultsCard from "./ResultsCard.vue";
 import { ref, onMounted } from "vue";
 import placeHolder from "@/assets/placeholderImg.png";
+import Trending from "./Trending.vue";
 
 const { VITE_MOVIEDB_API_KEY } = import.meta.env;
 
@@ -12,7 +13,7 @@ let searchTimeout: any;
 const handleChange = (): void => {
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
-    searchedItems.value = [];
+    searchedItems.value = undefined;
     fetchData();
   }, 300);
 };
@@ -43,7 +44,7 @@ const fetchData = async () => {
           @input="handleChange"
         />
       </div>
-      <div class="cardContainer">
+      <div v-if="searchedItems" class="cardContainer">
         <ResultsCard
           class="card"
           v-for="item in searchedItems"
@@ -58,6 +59,9 @@ const fetchData = async () => {
               : placeHolder
           "
         />
+      </div>
+      <div v-else>
+        <Trending />
       </div>
     </div>
   </main>

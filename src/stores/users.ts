@@ -100,8 +100,6 @@ export const useUserStore = defineStore("users", () => {
       password,
     });
 
-    console.log(error);
-
     if (error) {
       loading.value = false;
       errorMessage.value = error.message;
@@ -113,8 +111,6 @@ export const useUserStore = defineStore("users", () => {
       .select()
       .eq("email", email)
       .single();
-
-    console.log(exisitingUser);
 
     user.value = {
       id: exisitingUser.id,
