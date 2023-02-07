@@ -89,7 +89,7 @@ const checkIsOnMobile = () => {
           </div>
         </v-list>
       </v-navigation-drawer>
-      <v-main class="main"><RouterView /> </v-main>
+      <v-main class="main"><RouterView :key="$route.path" /> </v-main>
     </v-layout>
   </v-card>
 </template>

@@ -24,7 +24,7 @@ onBeforeMount(async () => {
       <Navbar />
     </div>
     <div v-else>
-      <RouterView />
+      <RouterView :key="$route.path" />
     </div>
   </main>
   <main v-else>
