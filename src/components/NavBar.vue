@@ -49,14 +49,19 @@ const checkIsOnMobile = () => {
           class="user"
           :prepend-avatar="photo"
           prepend-icon="mdi-account-badge"
-          @click="router.push(`/users/${user?.userName}`)"
-          :title="user?.userName"
           nav
         >
           <template v-slot:append>
+            <btn
+              class="btn"
+              variant="text"
+              @click="router.push(`/users/${user?.userName}`)"
+            >
+              {{ user?.userName }}
+            </btn>
             <v-btn
               variant="text"
-              icon="mdi-chevron-left"
+              :icon="isMobile.matches ? 'mdi-chevron-down' : 'mdi-chevron-left'"
               @click.stop="rail = !rail"
             ></v-btn>
           </template>
@@ -79,7 +84,15 @@ const checkIsOnMobile = () => {
               @click="router.push('/find')"
             ></v-list-item>
           </div>
+
           <div>
+            <v-divider></v-divider>
+            <v-list-item
+              prepend-icon="mdi-account"
+              title="My Account"
+              value="Account"
+            ></v-list-item>
+
             <v-list-item
               prepend-icon="mdi-logout"
               title="Logout"
@@ -100,7 +113,15 @@ const checkIsOnMobile = () => {
   min-height: 100vh;
 }
 
-.drawer {
-  background-color: black;
+.btn {
+  cursor: pointer;
+  margin-right: 30px;
+}
+
+.nav {
+  height: calc(97% - 40px);
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
 }
 </style>
