@@ -8,6 +8,7 @@ const { VITE_MOVIEDB_API_KEY } = import.meta.env;
 
 const searchTerm = ref<string>("");
 const searchedItems = ref<any[]>();
+
 let searchTimeout: any;
 
 const handleChange = (): void => {
@@ -33,38 +34,36 @@ const fetchData = async () => {
 </script>
 
 <template>
-  <main>
-    <div class="findContainer">
-      <h1>Need Something To Watch?</h1>
-      <div class="searchBar">
-        <input
-          v-model="searchTerm"
-          type="text"
-          placeholder="Search for a movie or tv show..."
-          @input="handleChange"
-        />
-      </div>
-      <div v-if="searchedItems" class="cardContainer">
-        <ResultsCard
-          class="card"
-          v-for="item in searchedItems"
-          :title="item.title || item.name"
-          :releaseDate="item.release_date"
-          :overview="item.overview"
-          :id="item.id"
-          :mediaType="item.media_type"
-          :image="
-            item.poster_path
-              ? `https://image.tmdb.org/t/p/w400/${item.poster_path}`
-              : placeHolder
-          "
-        />
-      </div>
-      <div v-else>
-        <Trending />
-      </div>
+  <div class="findContainer">
+    <h1>Need Something To Watch?</h1>
+    <div class="searchBar">
+      <input
+        v-model="searchTerm"
+        type="text"
+        placeholder="Search for a movie or tv show..."
+        @input="handleChange"
+      />
     </div>
-  </main>
+    <div v-if="searchedItems" class="cardContainer">
+      <ResultsCard
+        class="card"
+        v-for="item in searchedItems"
+        :title="item.title || item.name"
+        :releaseDate="item.release_date"
+        :overview="item.overview"
+        :id="item.id"
+        :mediaType="item.media_type"
+        :image="
+          item.poster_path
+            ? `https://image.tmdb.org/t/p/w400/${item.poster_path}`
+            : placeHolder
+        "
+      />
+    </div>
+    <div v-else>
+      <Trending />
+    </div>
+  </div>
 </template>
 
 <style scoped>

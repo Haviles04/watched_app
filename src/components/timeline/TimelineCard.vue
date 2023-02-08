@@ -60,7 +60,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div v-else>
+    <div v-else class="loading">
       <Loading />
     </div>
   </div>
@@ -70,6 +70,10 @@ onMounted(() => {
 .showImage img {
   max-height: 300px;
   border-radius: 5px;
+}
+
+.loading {
+  width: 100%;
 }
 
 .postInfo {

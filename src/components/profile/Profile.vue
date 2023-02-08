@@ -6,6 +6,8 @@ import { storeToRefs } from "pinia";
 import { supabase } from "@/supabase";
 import blank from "@/assets/blank.jpg";
 import TimelineCard from "../timeline/TimelineCard.vue";
+import Loading from "../Loading.vue";
+import Error from "../Error.vue";
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
@@ -17,33 +19,50 @@ const posts = ref<{}[]>();
 const userImage = ref("");
 const pageUser = ref<{ id: number }>();
 const currentUser = ref(user.value?.userName === userName);
-const following = ref();
+const following = ref<boolean>();
+const pageError = ref(false);
+
+const loading = ref<boolean>();
 
 const getPost = async () => {
-  const { data: userData, error } = await supabase
-    .from("users")
-    .select()
-    .eq("username", userName)
-    .single();
+  if (pageError.value) return;
+  try {
+    const { data: userData, error } = await supabase
+      .from("users")
+      .select()
+      .eq("username", userName)
+      .single();
 
-  const { data: postData } = await supabase
-    .from("post")
-    .select()
-    .eq("owner_id", userData.id);
-  posts.value = postData?.reverse();
+    const { data: postData } = await supabase
+      .from("post")
+      .select()
+      .eq("owner_id", userData.id);
+    posts.value = postData?.reverse();
+  } catch {
+    pageError.value = true;
+  }
 };
 
 const getUserInfo = async () => {
-  const { data: userData } = await supabase
-    .from("users")
-    .select()
-    .eq("username", userName)
-    .single();
-  pageUser.value = userData;
+  loading.value = true;
+  try {
+    const { data: userData } = await supabase
+      .from("users")
+      .select()
+      .eq("username", userName)
+      .single();
+    pageUser.value = userData;
 
-  userData.photo
-    ? (userImage.value = `https://gjbbtnlizfreuapdlysi.supabase.co/storage/v1/object/public/userphotos/${userData.photo}`)
-    : (userImage.value = blank);
+    userData.photo
+      ? (userImage.value = `https://gjbbtnlizfreuapdlysi.supabase.co/storage/v1/object/public/userphotos/${userData.photo}`)
+      : (userImage.value = blank);
+
+    getPost();
+    checkIsFollowing();
+    loading.value = false;
+  } catch {
+    pageError.value = true;
+  }
 };
 
 const followUser = async () => {
@@ -65,6 +84,7 @@ const unFollowUser = async () => {
 };
 
 const checkIsFollowing = async () => {
+  loading.value = true;
   try {
     const { data } = await supabase
       .from("follower_following")
@@ -75,33 +95,41 @@ const checkIsFollowing = async () => {
   } catch {
     following.value = false;
   }
+  loading.value = false;
 };
 
-watch(pageUser, () => {
-  checkIsFollowing();
-});
-
 onMounted(() => {
-  getPost();
   getUserInfo();
 });
 </script>
 
 <template>
-  <div class="userBar">
-    <div class="userInfo">
-      <div class="userImage">
-        <img :src="userImage" />
+  <div v-if="!pageError">
+    <div v-if="!loading">
+      <div class="userBar">
+        <div class="userInfo">
+          <div class="userImage">
+            <img :src="userImage" />
+          </div>
+          <h1>{{ userName }}</h1>
+        </div>
+        <v-btn v-if="!currentUser && !following" class="btn" @click="followUser"
+          >Follow</v-btn
+        >
+        <v-btn v-if="following" class="btn" @click="unFollowUser"
+          >Unfollow</v-btn
+        >
       </div>
-      <h1>{{ userName }}</h1>
+      <div class="cardContainer">
+        <TimelineCard v-for="post in posts" :post="post" />
+      </div>
     </div>
-    <v-btn v-if="!currentUser && !following" class="btn" @click="followUser"
-      >Follow</v-btn
-    >
-    <v-btn v-if="following" class="btn" @click="unFollowUser">Unfollow</v-btn>
+    <div v-else>
+      <Loading />
+    </div>
   </div>
-  <div class="cardContainer">
-    <TimelineCard v-for="post in posts" :post="post" />
+  <div v-else>
+    <Error />
   </div>
 </template>
 

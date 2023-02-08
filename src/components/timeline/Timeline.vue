@@ -4,6 +4,7 @@ import { supabase } from "@/supabase";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
 import TimelineCard from "./TimelineCard.vue";
+import TimelineSearch from "./TimelineSearch.vue";
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
@@ -33,6 +34,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <TimelineSearch />
   <div class="cardContainer">
     <TimelineCard v-for="post in posts" :post="post" />
   </div>
