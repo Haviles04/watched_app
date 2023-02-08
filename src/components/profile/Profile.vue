@@ -64,15 +64,16 @@ const unFollowUser = async () => {
 };
 
 const checkIsFollowing = async () => {
-  const { data, error } = await supabase
-    .from("follower_following")
-    .select()
-    .eq("follower_id", user.value?.id)
-    .eq("following_id", pageUser.value.id)
-    .single();
-
-  if (data) {
-    following.value = true;
+  try {
+    const { data } = await supabase
+      .from("follower_following")
+      .select()
+      .eq("follower_id", user.value?.id)
+      .eq("following_id", pageUser.value.id);
+    console.log(data);
+    if (data!.length > 0) following.value = true;
+  } catch {
+    following.value = false;
   }
 };
 
