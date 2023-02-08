@@ -52,13 +52,13 @@ const checkIsOnMobile = () => {
           nav
         >
           <template v-slot:append>
-            <btn
+            <a
               class="btn"
               variant="text"
               @click="router.push(`/users/${user?.userName}`)"
             >
               {{ user?.userName }}
-            </btn>
+            </a>
             <v-btn
               variant="text"
               :icon="isMobile.matches ? 'mdi-chevron-down' : 'mdi-chevron-left'"
