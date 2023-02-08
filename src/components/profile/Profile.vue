@@ -13,9 +13,9 @@ const { user } = storeToRefs(userStore);
 const route = useRoute();
 const { userName } = route.params;
 
-const posts = ref();
-const userImage = ref();
-const pageUser = ref();
+const posts = ref<{}[]>();
+const userImage = ref("");
+const pageUser = ref<{ id: number }>();
 const currentUser = ref(user.value?.userName === userName);
 const following = ref();
 
@@ -49,7 +49,7 @@ const getUserInfo = async () => {
 const followUser = async () => {
   const { data } = await supabase
     .from("follower_following")
-    .insert({ follower_id: user.value?.id, following_id: pageUser.value.id });
+    .insert({ follower_id: user.value?.id, following_id: pageUser.value?.id });
 
   following.value = true;
 };
@@ -59,7 +59,7 @@ const unFollowUser = async () => {
     .from("follower_following")
     .delete()
     .eq("follower_id", user.value?.id)
-    .eq("following_id", pageUser.value.id);
+    .eq("following_id", pageUser.value?.id);
 
   following.value = false;
 };
@@ -70,8 +70,7 @@ const checkIsFollowing = async () => {
       .from("follower_following")
       .select()
       .eq("follower_id", user.value?.id)
-      .eq("following_id", pageUser.value.id);
-    console.log(data);
+      .eq("following_id", pageUser.value?.id);
     if (data!.length > 0) following.value = true;
   } catch {
     following.value = false;
@@ -109,7 +108,7 @@ onMounted(() => {
 <style scoped>
 .cardContainer {
   margin: 0 auto;
-  max-width: 1700px;
+  max-width: 1400px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   justify-items: center;

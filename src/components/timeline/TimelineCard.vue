@@ -4,10 +4,17 @@ import { supabase } from "@/supabase";
 import blank from "@/assets/blank.jpg";
 import Loading from "../Loading.vue";
 
+interface postUser {
+  id?: number;
+  email?: string;
+  username?: string;
+  photo?: string;
+}
+
 const { post } = defineProps(["post"]);
-const postUser = ref();
-const userImage = ref();
-const loading = ref(true);
+const postUser = ref<postUser>();
+const userImage = ref<string>();
+const loading = ref<boolean>(true);
 
 const fetchUserData = async () => {
   loading.value = true;
@@ -19,10 +26,8 @@ const fetchUserData = async () => {
     .eq("id", post.owner_id)
     .single();
 
-  console.log(userData);
-
-  postUser.value = userData;
-  userImage.value = postUser.value.photo
+  postUser.value! = userData;
+  userImage.value = postUser.value?.photo
     ? `https://gjbbtnlizfreuapdlysi.supabase.co/storage/v1/object/public/userphotos/${postUser.value.photo}`
     : blank;
   loading.value = false;
@@ -44,7 +49,7 @@ onMounted(() => {
           <div class="userImgContainer">
             <img class="userImage" :src="userImage" />
           </div>
-          <h3>{{ postUser.username }}</h3>
+          <h3>{{ postUser!.username }}</h3>
           <p>- {{ post.created_at.slice(0, 10) }}</p>
         </div>
         <div class="capRat">

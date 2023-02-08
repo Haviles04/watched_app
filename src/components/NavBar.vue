@@ -42,7 +42,6 @@ const checkIsOnMobile = () => {
         v-model="drawer"
         :rail="rail"
         permanent
-        @click="rail = false"
         :location="isMobile.matches ? 'bottom' : 'left'"
       >
         <v-list-item
@@ -50,6 +49,7 @@ const checkIsOnMobile = () => {
           :prepend-avatar="photo"
           prepend-icon="mdi-account-badge"
           nav
+          @click="rail = false"
         >
           <template v-slot:append>
             <a

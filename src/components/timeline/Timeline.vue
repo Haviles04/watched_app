@@ -25,7 +25,6 @@ const fetchData = async () => {
     .order("created_at", { ascending: false });
 
   posts.value = postsData;
-  console.log(posts.value);
 };
 
 onMounted(() => {
@@ -42,7 +41,7 @@ onMounted(() => {
 <style scoped>
 .cardContainer {
   margin: 0 auto;
-  max-width: 1700px;
+  max-width: 1400px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   justify-items: center;
