@@ -2,27 +2,33 @@
 import { ref, onBeforeMount } from "vue";
 import ResultsCard from "./ResultsCard.vue";
 import placeHolder from "@/assets/placeholderImg.png";
+import Loading from "../Loading.vue";
 
 const { VITE_MOVIEDB_API_KEY } = import.meta.env;
 const trendingMovies = ref();
 const trendingTv = ref();
+const loading = ref(false);
 
 const fetchMovies = async () => {
+  loading.value = true;
   const { results } = await fetch(
     `https://api.themoviedb.org/3/trending/movie/day?api_key=${VITE_MOVIEDB_API_KEY}`
   )
     .then((r) => r.json())
     .catch((err) => console.log(err));
   trendingMovies.value = results.slice(0, 6);
+  loading.value = false;
 };
 
 const fetchTv = async () => {
+  loading.value = true;
   const { results } = await fetch(
     `https://api.themoviedb.org/3/trending/tv/day?api_key=${VITE_MOVIEDB_API_KEY}`
   )
     .then((r) => r.json())
     .catch((err) => console.log(err));
   trendingTv.value = results.slice(0, 6);
+  loading.value = false;
 };
 
 onBeforeMount(() => {
@@ -33,7 +39,7 @@ onBeforeMount(() => {
 
 <template>
   <h1>Trending Movies</h1>
-  <div class="container">
+  <div class="container" v-if="!loading">
     <ResultsCard
       class="card"
       v-for="movie in trendingMovies"
@@ -49,8 +55,9 @@ onBeforeMount(() => {
       "
     />
   </div>
+  <div class="loading" v-else><Loading /></div>
   <h1>Trending Tv</h1>
-  <div class="container">
+  <div class="container" v-if="!loading">
     <ResultsCard
       class="card"
       v-for="show in trendingTv"
@@ -66,6 +73,7 @@ onBeforeMount(() => {
       "
     />
   </div>
+  <div class="loading" v-else><Loading /></div>
 </template>
 
 <style scoped>
@@ -76,6 +84,10 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
+}
+
+.loading {
+  margin-top: 50px;
 }
 
 @media (max-width: 1020px) {

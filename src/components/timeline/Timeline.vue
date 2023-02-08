@@ -5,13 +5,16 @@ import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
 import TimelineCard from "./TimelineCard.vue";
 import TimelineSearch from "./TimelineSearch.vue";
+import Loading from "../Loading.vue";
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const posts = ref<{}[]>();
 const loading = ref(false);
+const emptyPost = ref(false);
 
 const fetchData = async () => {
+  loading.value = true;
   const { data: following } = await supabase
     .from("follower_following")
     .select()
@@ -26,6 +29,8 @@ const fetchData = async () => {
     .order("created_at", { ascending: false });
 
   posts.value = postsData!;
+  emptyPost.value = posts.value.length < 1;
+  loading.value = false;
 };
 
 onMounted(() => {
@@ -35,9 +40,13 @@ onMounted(() => {
 
 <template>
   <TimelineSearch />
-  <div class="cardContainer">
+  <div class="emptyPost" v-if="emptyPost">
+    <span>Add Friends to see what they have watched!</span>
+  </div>
+  <div v-if="!loading" class="cardContainer">
     <TimelineCard v-for="post in posts" :post="post" />
   </div>
+  <div v-else><Loading /></div>
 </template>
 
 <style scoped>
@@ -48,6 +57,12 @@ onMounted(() => {
   grid-template-columns: repeat(2, 1fr);
   justify-items: center;
   gap: 5px;
+}
+
+.emptyPost {
+  margin-top: 50px;
+  width: 100%;
+  text-align: center;
 }
 
 @media (max-width: 1400px) {

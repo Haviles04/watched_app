@@ -37,6 +37,7 @@ const savePost = async () => {
     owner_id: user.value?.id,
     rating: rating.value,
     media_type: mediaType,
+    created_at: new Date(),
     name,
   });
 

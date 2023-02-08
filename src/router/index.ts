@@ -4,6 +4,7 @@ import LoginView from "@/views/LoginView.vue";
 import FindView from "@/views/FindView.vue";
 import ShowDetailsView from "@/views/ShowDetailsView.vue";
 import ProfileView from "@/views/ProfileView.vue";
+import AccountView from "@/views/AccountView.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -31,6 +32,11 @@ const router = createRouter({
       path: "/users/:userName",
       name: "profile",
       component: ProfileView,
+    },
+    {
+      path: "/account",
+      name: "account",
+      component: AccountView,
     },
   ],
 });

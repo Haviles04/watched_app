@@ -3,11 +3,13 @@ import ResultsCard from "./ResultsCard.vue";
 import { ref, onMounted } from "vue";
 import placeHolder from "@/assets/placeholderImg.png";
 import Trending from "./Trending.vue";
+import Loading from "../Loading.vue";
 
 const { VITE_MOVIEDB_API_KEY } = import.meta.env;
 
 const searchTerm = ref<string>("");
 const searchedItems = ref<any[]>();
+const loading = ref(false);
 
 let searchTimeout: any;
 
@@ -20,7 +22,9 @@ const handleChange = (): void => {
 };
 
 const fetchData = async () => {
+  loading.value = true;
   if (searchTerm.value.length < 1) {
+    loading.value = false;
     return;
   }
 
@@ -30,6 +34,7 @@ const fetchData = async () => {
     .then((r) => r.json())
     .catch((err) => console.log(err));
   searchedItems.value = data.results;
+  loading.value = false;
 };
 </script>
 
@@ -44,24 +49,29 @@ const fetchData = async () => {
         @input="handleChange"
       />
     </div>
-    <div v-if="searchedItems" class="cardContainer">
-      <ResultsCard
-        class="card"
-        v-for="item in searchedItems"
-        :title="item.title || item.name"
-        :releaseDate="item.release_date"
-        :overview="item.overview"
-        :id="item.id"
-        :mediaType="item.media_type"
-        :image="
-          item.poster_path
-            ? `https://image.tmdb.org/t/p/w400/${item.poster_path}`
-            : placeHolder
-        "
-      />
+    <div v-if="!loading">
+      <div v-if="searchedItems" class="cardContainer">
+        <ResultsCard
+          class="card"
+          v-for="item in searchedItems"
+          :title="item.title || item.name"
+          :releaseDate="item.release_date"
+          :overview="item.overview"
+          :id="item.id"
+          :mediaType="item.media_type"
+          :image="
+            item.poster_path
+              ? `https://image.tmdb.org/t/p/w400/${item.poster_path}`
+              : placeHolder
+          "
+        />
+      </div>
+      <div v-else>
+        <Trending />
+      </div>
     </div>
-    <div v-else>
-      <Trending />
+    <div v-else class="loading">
+      <Loading />
     </div>
   </div>
 </template>
@@ -107,6 +117,13 @@ const fetchData = async () => {
 
 .searchBar input::placeholder {
   color: white;
+}
+
+.loading {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-width: 1020px) {

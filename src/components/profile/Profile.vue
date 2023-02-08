@@ -21,7 +21,7 @@ const pageUser = ref<{ id: number }>();
 const currentUser = ref(user.value?.userName === userName);
 const following = ref<boolean>();
 const pageError = ref(false);
-
+const emptyPosts = ref(false);
 const loading = ref<boolean>();
 
 const getPost = async () => {
@@ -38,6 +38,7 @@ const getPost = async () => {
       .select()
       .eq("owner_id", userData.id);
     posts.value = postData?.reverse();
+    emptyPosts.value = posts.value!.length < 1;
   } catch {
     pageError.value = true;
   }
@@ -120,12 +121,17 @@ onMounted(() => {
           >Unfollow</v-btn
         >
       </div>
+      <div class="emptyPosts" v-if="emptyPosts">
+        <span>This user hasn't watched anything yet</span>
+      </div>
       <div class="cardContainer">
         <TimelineCard v-for="post in posts" :post="post" />
       </div>
     </div>
     <div v-else>
-      <Loading />
+      <div class="loading">
+        <Loading />
+      </div>
     </div>
   </div>
   <div v-else>
@@ -134,6 +140,11 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.emptyPosts {
+  margin-top: 50px;
+  width: 100%;
+  text-align: center;
+}
 .cardContainer {
   margin: 0 auto;
   max-width: 1400px;
@@ -141,6 +152,10 @@ onMounted(() => {
   grid-template-columns: repeat(2, 1fr);
   justify-items: center;
   gap: 0px;
+}
+
+.cardContainer span {
+  margin: 0 auto;
 }
 
 @media (max-width: 1400px) {
@@ -208,5 +223,9 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   margin-left: 25px;
+}
+
+.loading {
+  margin-top: 50px;
 }
 </style>

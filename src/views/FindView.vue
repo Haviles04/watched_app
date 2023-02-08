@@ -3,5 +3,7 @@ import MovieShowSearch from "@/components/movieShowSearch/MovieShowSearch.vue";
 </script>
 
 <template>
-  <MovieShowSearch />
+  <main>
+    <MovieShowSearch />
+  </main>
 </template>

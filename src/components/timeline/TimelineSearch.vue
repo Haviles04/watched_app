@@ -16,7 +16,7 @@ const handleClick = () => {
       <input
         v-model="searchTerm"
         type="text"
-        placeholder="Search for Family or Friends..."
+        placeholder="Search by username..."
       />
       <button @click="handleClick">
         Search <v-icon icon="mdi-magnify" size="large"></v-icon>
