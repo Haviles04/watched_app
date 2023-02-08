@@ -4,6 +4,7 @@ import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
 import blank from "@/assets/blank.jpg";
 import { supabase } from "@/supabase";
+import Loading from "../Loading.vue";
 const { VITE_USERPHOTO_URL } = import.meta.env;
 
 const userStore = useUserStore();
@@ -14,9 +15,10 @@ const file = ref();
 const newFirst = ref<string>();
 const newLast = ref<string>();
 const newHometown = ref("");
+const loading = ref(false);
 
 userImage.value = user.value?.photo
-  ? `https://gjbbtnlizfreuapdlysi.supabase.co/storage/v1/object/public/userphotos/${user.value.photo}`
+  ? `${VITE_USERPHOTO_URL}${user.value.photo}`
   : blank;
 
 const handleUploadChange = (e: any) => {
@@ -43,7 +45,7 @@ const changeLast = async () => {
     .match({ id: user.value!.id });
 };
 const changeHometown = async () => {
-  if (!newHometown) return;
+  if (!newHometown.value) return;
 
   const data = await supabase
     .from("users")
@@ -54,11 +56,9 @@ const changeHometown = async () => {
 const newPhoto = async () => {
   if (!file.value) return;
 
-  console.log(user.value?.photo);
   const response = await supabase.storage
     .from("userphotos")
     .remove([`${user.value?.photo}`]);
-  console.log(response);
 
   const fileName = `${user.value!.id}/${file.value.name}`;
   const { data, error } = await supabase.storage
@@ -72,11 +72,13 @@ const newPhoto = async () => {
 };
 
 const handleSave = async () => {
+  loading.value = true;
   await changeFirst();
   await changeLast();
   await changeHometown();
   await newPhoto();
   userStore.getUser();
+  loading.value = false;
 };
 </script>
 
@@ -94,7 +96,7 @@ const handleSave = async () => {
         <template v-slot:activator="{ props }">
           <v-btn color="#778da9" v-bind="props"> Change info </v-btn>
         </template>
-        <v-card class="infoCard">
+        <v-card class="infoCard" v-if="!loading">
           <v-card-title>
             <span class="text-h5">User Profile</span>
           </v-card-title>
@@ -141,6 +143,9 @@ const handleSave = async () => {
             </v-btn>
           </v-card-actions>
         </v-card>
+        <div v-else>
+          <Loading />
+        </div>
       </v-dialog>
     </v-row>
   </div>

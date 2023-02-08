@@ -163,8 +163,8 @@ export const useUserStore = defineStore("users", () => {
   const handleLogout = async () => {
     loading.value = true;
     await supabase.auth.signOut();
-    user.value = undefined;
     router.push("/login");
+    user.value = undefined;
     loading.value = false;
   };
 

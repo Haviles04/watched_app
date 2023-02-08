@@ -20,7 +20,6 @@ const fetchData = async () => {
     .select()
     .eq("follower_id", user.value?.id);
 
-  console.log(error);
   const ownerIds = following?.map((f) => f.following_id);
 
   const { data: postsData } = await supabase
@@ -37,8 +36,6 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData();
 });
-
-console.log(user.value?.id);
 </script>
 
 <template>

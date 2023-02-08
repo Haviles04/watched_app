@@ -23,6 +23,7 @@ const following = ref<boolean>();
 const pageError = ref(false);
 const emptyPosts = ref(false);
 const loading = ref<boolean>();
+const { VITE_USERPHOTO_URL } = import.meta.env;
 
 const getPost = async () => {
   if (pageError.value) return;
@@ -55,7 +56,7 @@ const getUserInfo = async () => {
     pageUser.value = userData;
 
     userData.photo
-      ? (userImage.value = `https://gjbbtnlizfreuapdlysi.supabase.co/storage/v1/object/public/userphotos/${userData.photo}`)
+      ? (userImage.value = `${VITE_USERPHOTO_URL}${userData.photo}`)
       : (userImage.value = blank);
 
     getPost();
@@ -191,6 +192,7 @@ onMounted(() => {
 .userImage img {
   width: 100px;
   height: 100px;
+  object-fit: cover;
 }
 .userInfo {
   display: flex;

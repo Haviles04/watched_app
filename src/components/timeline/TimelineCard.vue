@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
 import { supabase } from "@/supabase";
 import blank from "@/assets/blank.jpg";
 import Loading from "../Loading.vue";
+const { VITE_USERPHOTO_URL } = import.meta.env;
+
+const router = useRouter();
 
 interface postUser {
   id?: number;
@@ -28,7 +32,7 @@ const fetchUserData = async () => {
 
   postUser.value! = userData;
   userImage.value = postUser.value?.photo
-    ? `https://gjbbtnlizfreuapdlysi.supabase.co/storage/v1/object/public/userphotos/${postUser.value.photo}`
+    ? `${VITE_USERPHOTO_URL}${postUser.value.photo}`
     : blank;
   loading.value = false;
 };
@@ -42,10 +46,16 @@ onMounted(() => {
   <div class="post">
     <div v-if="!loading" class="postInfo">
       <div class="showImage">
-        <img :src="post.show_image" />
+        <img
+          :src="post.show_image"
+          @click="router.push(`/${post.media_type}/${post.show_id}`)"
+        />
       </div>
       <div class="postDetails">
-        <div class="userBar">
+        <div
+          class="userBar"
+          @click="router.push(`/users/${postUser?.username}`)"
+        >
           <div class="userImgContainer">
             <img class="userImage" :src="userImage" />
           </div>
@@ -70,6 +80,7 @@ onMounted(() => {
 .showImage img {
   max-height: 300px;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .loading {
@@ -87,12 +98,12 @@ onMounted(() => {
   width: 75px;
   height: 75px;
   border-radius: 50%;
-  object-fit: contain;
   overflow: hidden;
 }
 .userImage {
   width: 75px;
   height: 75px;
+  object-fit: cover;
 }
 
 .userBar {
@@ -100,6 +111,7 @@ onMounted(() => {
   flex-wrap: wrap;
   align-items: center;
   margin-left: 10px;
+  cursor: pointer;
 }
 
 .userBar p {

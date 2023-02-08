@@ -38,13 +38,19 @@ onMounted(() => checkIfWatched());
 
 <template>
   <v-card class="mx-auto card" max-width="300">
-    <v-img class="align-end text-white" height="400" :src="image" cover>
+    <v-img
+      class="img align-end text-white"
+      height="400"
+      :src="image"
+      cover
+      @click="router.push(`/${mediaType}/${id}`)"
+    >
     </v-img>
 
     <v-card-subtitle class="pt-4">{{ releaseDate }} </v-card-subtitle>
 
     <v-card-text>
-      <h1>{{ title }}</h1>
+      <h1 @click="router.push(`/${mediaType}/${id}`)">{{ title }}</h1>
       <div class="overView">{{ overview }}</div>
     </v-card-text>
 
@@ -80,10 +86,15 @@ onMounted(() => checkIfWatched());
   justify-content: space-between;
 }
 
+.img {
+  cursor: pointer;
+}
+
 .card h1 {
   color: #415a77;
   margin-bottom: 10px;
   line-height: 1.7rem;
+  cursor: pointer;
 }
 
 .overView {
