@@ -7,7 +7,7 @@ import TimelineCard from "./TimelineCard.vue";
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-const posts = ref();
+const posts = ref<{}[]>();
 const loading = ref(false);
 
 const fetchData = async () => {
@@ -24,7 +24,7 @@ const fetchData = async () => {
     .in("owner_id", ownerIds!)
     .order("created_at", { ascending: false });
 
-  posts.value = postsData;
+  posts.value = postsData!;
 };
 
 onMounted(() => {
