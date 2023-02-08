@@ -91,6 +91,7 @@ const checkIsOnMobile = () => {
               prepend-icon="mdi-account"
               title="My Account"
               value="Account"
+              @click="router.push('/account')"
             ></v-list-item>
 
             <v-list-item

@@ -85,6 +85,7 @@ const unFollowUser = async () => {
 };
 
 const checkIsFollowing = async () => {
+  if (currentUser.value) return;
   loading.value = true;
   try {
     const { data } = await supabase

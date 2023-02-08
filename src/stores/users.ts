@@ -16,6 +16,9 @@ export const useUserStore = defineStore("users", () => {
     email?: string;
     userName?: string;
     photo?: string;
+    first_name?: string;
+    last_name?: string;
+    hometown?: string;
   }
 
   const router = useRouter();
@@ -57,14 +60,16 @@ export const useUserStore = defineStore("users", () => {
       return (errorMessage.value = "Username already taken");
     }
 
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email, password });
 
     if (error) {
       loading.value = false;
       return (errorMessage.value = error.message);
     }
 
-    await supabase.from("users").insert({ username: userName, email });
+    await supabase
+      .from("users")
+      .insert({ id: data.user!.id, username: userName, email });
 
     const { data: newUser } = await supabase
       .from("users")
@@ -117,6 +122,9 @@ export const useUserStore = defineStore("users", () => {
       email: exisitingUser.email,
       userName: exisitingUser.username,
       photo: exisitingUser.photo,
+      first_name: exisitingUser.first_name,
+      last_name: exisitingUser.last_name,
+      hometown: exisitingUser.hometown,
     };
 
     loading.value = false;
@@ -144,6 +152,9 @@ export const useUserStore = defineStore("users", () => {
       userName: userWithEmail.username,
       email: userWithEmail.email,
       photo: userWithEmail.photo,
+      first_name: userWithEmail.first_name,
+      last_name: userWithEmail.last_name,
+      hometown: userWithEmail.hometown,
     };
     loading.value = false;
     return true;
@@ -166,4 +177,6 @@ export const useUserStore = defineStore("users", () => {
     errorMessage,
     user,
   };
+
+  console.log(user.value);
 });

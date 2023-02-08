@@ -15,11 +15,12 @@ const emptyPost = ref(false);
 
 const fetchData = async () => {
   loading.value = true;
-  const { data: following } = await supabase
+  const { data: following, error } = await supabase
     .from("follower_following")
     .select()
     .eq("follower_id", user.value?.id);
 
+  console.log(error);
   const ownerIds = following?.map((f) => f.following_id);
 
   const { data: postsData } = await supabase
@@ -36,6 +37,8 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData();
 });
+
+console.log(user.value?.id);
 </script>
 
 <template>
