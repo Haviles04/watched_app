@@ -5,6 +5,7 @@ import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
 import { supabase } from "@/supabase";
 import blank from "@/assets/blank.jpg";
+import TimelineCard from "../timeline/TimelineCard.vue";
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
@@ -100,16 +101,26 @@ onMounted(() => {
     >
     <v-btn v-if="following" class="btn" @click="unFollowUser">Unfollow</v-btn>
   </div>
-  <div class="watched" v-for="post in posts">
-    <img :src="post.show_image" :alt="post.name" />
-    <div class="postDetails">
-      <h3>{{ post.name }}</h3>
-      <p>{{ post.caption }}</p>
-    </div>
+  <div class="cardContainer">
+    <TimelineCard v-for="post in posts" :post="post" />
   </div>
 </template>
 
 <style scoped>
+.cardContainer {
+  margin: 0 auto;
+  max-width: 1700px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-items: center;
+  gap: 0px;
+}
+
+@media (max-width: 1400px) {
+  .cardContainer {
+    grid-template-columns: 1fr;
+  }
+}
 .userBar {
   margin: 10px auto;
   max-width: 900px;

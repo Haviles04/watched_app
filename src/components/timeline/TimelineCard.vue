@@ -8,7 +8,6 @@ const { post } = defineProps(["post"]);
 const postUser = ref();
 const userImage = ref();
 const loading = ref(true);
-const rating = ref<number>();
 
 const fetchUserData = async () => {
   loading.value = true;
@@ -20,8 +19,12 @@ const fetchUserData = async () => {
     .eq("id", post.owner_id)
     .single();
 
+  console.log(userData);
+
   postUser.value = userData;
-  userImage.value = postUser.value.photo ? postUser.value.photo : blank;
+  userImage.value = postUser.value.photo
+    ? `https://gjbbtnlizfreuapdlysi.supabase.co/storage/v1/object/public/userphotos/${postUser.value.photo}`
+    : blank;
   loading.value = false;
 };
 
@@ -80,6 +83,7 @@ onMounted(() => {
 }
 .userImage {
   width: 75px;
+  height: 75px;
 }
 
 .userBar {
