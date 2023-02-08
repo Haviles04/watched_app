@@ -34,6 +34,11 @@ export const useUserStore = defineStore("users", () => {
       );
   };
 
+  const validUserName = (name: string) => {
+    let patt = /^([a-zA-Z0-9_-]+)$/;
+    return patt.test(name);
+  };
+
   const handleSignup = async (credentials: UserSignupLogin) => {
     const { email, password, userName } = credentials;
 
@@ -45,6 +50,9 @@ export const useUserStore = defineStore("users", () => {
     }
     if (userName && userName.length < 8) {
       return (errorMessage.value = "Username must be at least 8 characters");
+    }
+    if (!validUserName(userName!)) {
+      return (errorMessage.value = "Username may only by numbers and letters");
     }
 
     loading.value = true;
@@ -162,9 +170,9 @@ export const useUserStore = defineStore("users", () => {
 
   const handleLogout = async () => {
     loading.value = true;
+    user.value = undefined;
     await supabase.auth.signOut();
     router.push("/login");
-    user.value = undefined;
     loading.value = false;
   };
 
