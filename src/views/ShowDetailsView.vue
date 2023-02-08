@@ -3,5 +3,7 @@ import showDetails from "@/components/showDetails/showDetails.vue";
 </script>
 
 <template>
-  <showDetails />
+  <main>
+    <showDetails />
+  </main>
 </template>

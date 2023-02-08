@@ -1,18 +1,9 @@
 <script setup lang="ts">
-import { onBeforeMount } from "vue";
-import { useRouter } from "vue-router";
-import { useUserStore } from "@/stores/users";
-import { storeToRefs } from "pinia";
-
-const router = useRouter();
-const userStore = useUserStore();
-const { user } = storeToRefs(userStore);
+import Timeline from "@/components/timeline/Timeline.vue";
 </script>
 
-<template><p></p></template>
-
-<style scoped>
-p {
-  color: white;
-}
-</style>
+<template>
+  <main>
+    <Timeline />
+  </main>
+</template>
