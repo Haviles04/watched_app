@@ -77,7 +77,7 @@ export const useUserStore = defineStore("users", () => {
 
     await supabase
       .from("users")
-      .insert({ id: data.user!.id, username: userName, email });
+      .insert({ id: data.user!.id, username: userName?.toLowerCase(), email });
 
     const { data: newUser } = await supabase
       .from("users")
