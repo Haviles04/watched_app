@@ -3,10 +3,20 @@ import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { supabase } from "@/supabase";
 
+interface User {
+  id?: number;
+  email?: string;
+  userName?: string;
+  photo?: string;
+  first_name?: string;
+  last_name?: string;
+  hometown?: string;
+}
+
 const route = useRoute();
 const searchTerm = ref<string>(route.params.searchTerm as string);
 const searchMatches = ref<any>([]);
-const allUserData = ref();
+const allUserData = ref<User[] | null>();
 const error = ref(false);
 
 const getAllUserData = async () => {
@@ -18,25 +28,13 @@ const getAllUserData = async () => {
   }
 };
 
-const filterSearch = async () => {
+const filterSearch = () => {
   searchMatches.value = [];
-  allUserData?.value.map((user: string, {}, []) => {
-    //turns object into array and lowercases
-    const lowerCaseArr = Object.values(user).map((item) => {
-      if (!item) return;
-      return item.toLowerCase();
-    });
-
-    //custom filter to match multiple search terms
-    const searchTermArr = searchTerm.value.toLowerCase().trim().split(" ");
-
-    searchTermArr.forEach((term, i) => {
-      //checks if values after first match, if not they remove the user from the matched arrays
-      if (i > 0 && !lowerCaseArr.includes(searchTermArr[i - 1]))
-        return searchMatches.value.pop();
-
-      if (lowerCaseArr.includes(term) && !searchMatches.value.includes(user)) {
-        searchMatches.value?.push(user);
+  allUserData.value?.map((user) => {
+    Object.values(user).filter((key) => {
+      if (!key || searchMatches.value.includes(user)) return;
+      if (key.toLowerCase().includes(searchTerm.value.toLowerCase())) {
+        searchMatches.value.push(user);
       }
     });
   });
