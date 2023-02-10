@@ -1,56 +1,63 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { supabase } from "@/supabase";
 
 const route = useRoute();
-
-const searchTerm = route.params.searchTerm as string;
-const searchTermArr = searchTerm.split(" ");
-const searchMatches = ref<{}[]>([]);
+const searchTerm = ref<string>(route.params.searchTerm as string);
+const searchMatches = ref<any>([]);
+const allUserData = ref();
 const error = ref(false);
 
-const filterSearchByQuery = async () => {
-  //fetchs data from user table from supabase
+const getAllUserData = async () => {
   try {
-    const { data: allUserData } = await supabase.from("users").select();
-    console.log(allUserData);
-    allUserData?.map((user: string, {}, []) => {
-      let lowerCaseArr: string[] = [];
-
-      //turns each user which is an object into an array and lowercases the value
-      Object.values(user).map((item) => {
-        if (!item) return;
-        lowerCaseArr.push(item.toLowerCase());
-      });
-
-      //goes through each value in the search term and pushes value to matched array
-      searchTermArr.forEach((term, i) => {
-        //returns if the term before it doesn't match
-        if (i > 0 && !lowerCaseArr.includes(searchTermArr[i - 1]))
-          return searchMatches.value.pop();
-
-        //pushes user to array if searchterm is matched
-        if (
-          lowerCaseArr.includes(term) &&
-          !searchMatches.value.includes(user)
-        ) {
-          searchMatches.value?.push(user);
-        }
-      });
-    });
+    const { data } = await supabase.from("users").select();
+    allUserData.value = data;
   } catch {
     error.value = true;
   }
 };
 
-onMounted(() => {
-  filterSearchByQuery();
+const filterSearch = async () => {
+  searchMatches.value = [];
+  allUserData?.value.map((user: string, {}, []) => {
+    //turns object into array and lowercases
+    const lowerCaseArr = Object.values(user).map((item) => {
+      if (!item) return;
+      return item.toLowerCase();
+    });
+
+    //custom filter to match multiple search terms
+    const searchTermArr = searchTerm.value.toLowerCase().trim().split(" ");
+
+    searchTermArr.forEach((term, i) => {
+      //checks if values after first match, if not they remove the user from the matched arrays
+      if (i > 0 && !lowerCaseArr.includes(searchTermArr[i - 1]))
+        return searchMatches.value.pop();
+
+      if (lowerCaseArr.includes(term) && !searchMatches.value.includes(user)) {
+        searchMatches.value?.push(user);
+      }
+    });
+  });
+};
+
+watch(searchTerm, () => filterSearch());
+
+onMounted(async () => {
+  await getAllUserData();
+  filterSearch();
 });
+
+console.log(searchTerm.value);
 </script>
 
 <template>
   <h1>Search</h1>
+  <input type="text" v-model="searchTerm" />
+  <div v-for="person in searchMatches">
+    <h1>{{ person.username }}</h1>
+  </div>
 </template>
 
 <style scoped></style>
