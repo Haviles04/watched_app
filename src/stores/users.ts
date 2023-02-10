@@ -1,4 +1,4 @@
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 import { defineStore } from "pinia";
 import { supabase } from "../supabase";
 import { useRouter } from "vue-router";
@@ -185,6 +185,4 @@ export const useUserStore = defineStore("users", () => {
     errorMessage,
     user,
   };
-
-  console.log(user.value);
 });

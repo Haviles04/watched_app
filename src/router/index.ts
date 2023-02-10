@@ -5,6 +5,8 @@ import FindView from "@/views/FindView.vue";
 import ShowDetailsView from "@/views/ShowDetailsView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import AccountView from "@/views/AccountView.vue";
+import PeopleSearchView from "@/views/PeopleSearchView.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -37,6 +39,11 @@ const router = createRouter({
       path: "/account",
       name: "account",
       component: AccountView,
+    },
+    {
+      path: "/users/search/:searchTerm",
+      name: "peopleSearch",
+      component: PeopleSearchView,
     },
   ],
 });

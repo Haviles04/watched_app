@@ -1,13 +1,20 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { supabase } from "@/supabase";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 const searchTerm = ref<string>();
+const allUsers = ref();
 
-const handleClick = () => {
-  router.push(`/users/${searchTerm.value?.toLowerCase()}`);
+const handleClick = async () => {
+  router.push(`/users/search/${searchTerm.value?.toLowerCase()}`);
 };
+
+onMounted(async () => {
+  const { data: allUserData } = await supabase.from("users").select();
+  allUsers.value = allUserData;
+});
 </script>
 
 <template>
@@ -18,9 +25,7 @@ const handleClick = () => {
         type="text"
         placeholder="Search by username..."
       />
-      <button @click="handleClick">
-        Search <v-icon icon="mdi-magnify" size="large"></v-icon>
-      </button>
+      <button>Search <v-icon icon="mdi-magnify" size="large"></v-icon></button>
     </form>
   </div>
 </template>
