@@ -1,7 +1,5 @@
 <script setup lang="ts">
 const { cast } = defineProps(["cast"]);
-
-console.log(cast);
 </script>
 
 <template>
