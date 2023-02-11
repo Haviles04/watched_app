@@ -2,6 +2,7 @@
 import { ref, onMounted, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import { supabase } from "@/supabase";
+import ResultCard from "./ResultCard.vue";
 
 interface User {
   id?: number;
@@ -16,8 +17,7 @@ interface User {
 const route = useRoute();
 const allUserData = ref<User[] | null>();
 const error = ref(false);
-const searchTerm = ref<string>();
-searchTerm.value = route.params.searchTerm as string;
+const searchTerm = ref<string>(route.params.searchTerm as string);
 
 const getAllUserData = async () => {
   try {
@@ -45,9 +45,42 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>Search</h1>
-  <input type="text" v-model="searchTerm" />
-  <div v-for="user in filteredUsers">{{ user.username }}</div>
+  <div class="searchContainer">
+    <h1>Search</h1>
+    <input
+      type="text"
+      v-model="searchTerm"
+      placeholder="Search for someone.."
+    />
+    <button></button>
+  </div>
+  <div v-if="!error">
+    <section>
+      <div class="resultContainer">
+        <ResultCard v-for="user in filteredUsers" :user="user" :key="user.id" />
+      </div>
+    </section>
+  </div>
+  <div v-else>Ooops.. something went wrong</div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.searchContainer {
+  margin: 0 auto;
+  max-width: 1000px;
+  margin: 25px auto;
+}
+
+.searchContainer input {
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding-left: 5px;
+}
+.resultContainer {
+  margin: 0 auto;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+}
+</style>

@@ -45,6 +45,11 @@ const router = createRouter({
       name: "peopleSearch",
       component: PeopleSearchView,
     },
+    {
+      path: "/users/search/",
+      name: "peopleSearchBlank",
+      component: PeopleSearchView,
+    },
   ],
 });
 
