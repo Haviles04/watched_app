@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import ResultsCard from "./ResultsCard.vue";
-import { ref, onMounted } from "vue";
+import { ref, computed } from "vue";
 import placeHolder from "@/assets/placeholderImg.png";
 import Trending from "./Trending.vue";
 import Loading from "../Loading.vue";
+import Error from "../Error.vue";
 
 const { VITE_MOVIEDB_API_KEY } = import.meta.env;
 
 const searchTerm = ref<string>("");
 const searchedItems = ref<any[]>();
 const loading = ref(false);
+const pageNumber = ref(1);
+const error = ref(false);
+const totalPages = ref();
 
 let searchTimeout: any;
 
@@ -21,6 +25,12 @@ const handleChange = (): void => {
   }, 300);
 };
 
+const handleClick = (dir: string) => {
+  pageNumber.value =
+    dir === "next" ? (pageNumber.value += 1) : (pageNumber.value -= 1);
+  fetchData();
+};
+
 const fetchData = async () => {
   loading.value = true;
   if (searchTerm.value.length < 1) {
@@ -28,51 +38,71 @@ const fetchData = async () => {
     return;
   }
 
-  const data = await fetch(
-    `https://api.themoviedb.org/3/search/multi?api_key=${VITE_MOVIEDB_API_KEY}&language=en-US&query=${searchTerm.value}&page=1&include_adult=false`
-  )
-    .then((r) => r.json())
-    .catch((err) => console.log(err));
-  searchedItems.value = data.results;
-  loading.value = false;
+  try {
+    const data = await fetch(
+      `https://api.themoviedb.org/3/search/multi?api_key=${VITE_MOVIEDB_API_KEY}&language=en-US&query=${searchTerm.value}&page=${pageNumber.value}&include_adult=false`
+    ).then((r) => r.json());
+    searchedItems.value = data.results;
+    totalPages.value = data.total_pages;
+    loading.value = false;
+  } catch {
+    loading.value = false;
+    error.value = true;
+  }
 };
 </script>
 
 <template>
-  <div class="findContainer">
-    <h1>Need Something To Watch?</h1>
-    <div class="searchBar">
-      <input
-        v-model="searchTerm"
-        type="text"
-        placeholder="Search for a movie or tv show..."
-        @input="handleChange"
-      />
-    </div>
-    <div v-if="!loading">
-      <div v-if="searchedItems" class="cardContainer">
-        <ResultsCard
-          class="card"
-          v-for="item in searchedItems"
-          :title="item.title || item.name"
-          :releaseDate="item.release_date"
-          :overview="item.overview"
-          :id="item.id"
-          :mediaType="item.media_type"
-          :image="
-            item.poster_path
-              ? `https://image.tmdb.org/t/p/w400/${item.poster_path}`
-              : placeHolder
-          "
+  <div v-if="!error">
+    <div class="findContainer">
+      <h1>Need Something To Watch?</h1>
+      <div class="searchBar">
+        <input
+          v-model="searchTerm"
+          type="text"
+          placeholder="Search for a movie or tv show..."
+          @input="handleChange"
         />
       </div>
-      <div v-else>
-        <Trending />
+
+      <div v-if="!loading">
+        <div v-if="searchedItems" class="cardContainer">
+          <ResultsCard
+            class="card"
+            :key="`${item.media_type}_${item.id}`"
+            v-for="item in searchedItems"
+            :title="item.title || item.name"
+            :releaseDate="item.release_date"
+            :overview="item.overview"
+            :id="item.id"
+            :mediaType="item.media_type"
+            :image="
+              item.poster_path
+                ? `https://image.tmdb.org/t/p/w400/${item.poster_path}`
+                : placeHolder
+            "
+          />
+          <div class="paginationContainer">
+            <button v-if="pageNumber > 1" @click="handleClick('prev')">
+              <v-icon x-large> mdi-arrow-left </v-icon>
+            </button>
+            <button v-if="pageNumber < totalPages" @click="handleClick('next')">
+              <v-icon x-large> mdi-arrow-right </v-icon>
+            </button>
+          </div>
+        </div>
+
+        <div v-else>
+          <Trending />
+        </div>
+      </div>
+      <div v-else class="loading">
+        <Loading />
       </div>
     </div>
-    <div v-else class="loading">
-      <Loading />
-    </div>
+  </div>
+  <div v-else>
+    <Error />
   </div>
 </template>
 
@@ -89,10 +119,23 @@ const fetchData = async () => {
   color: #415a77;
 }
 
+.paginationContainer {
+  width: 100%;
+  margin: 30px auto;
+}
+
+.paginationContainer button {
+  background-color: white;
+  border-radius: 50%;
+  margin: 20px;
+  padding: 20px;
+  box-shadow: 5px 5px 5px #778da9;
+}
+
 .cardContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 1rem;
+  max-width: 1000px;
+  flex-wrap: wrap;
+  display: flex;
 }
 
 .card {

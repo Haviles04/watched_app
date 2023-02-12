@@ -12,7 +12,11 @@ const userName = user.username[0].toUpperCase() + user.username.slice(1);
 <template>
   <div class="userResult">
     <div class="infoContainer">
-      <img :src="profileImg" alt="user.username" />
+      <img
+        :src="profileImg"
+        alt="user.username"
+        @click="router.push(`/users/${user.username}`)"
+      />
       <div class="userInfo">
         <h3>{{ userName }}</h3>
         <span>{{ user.first_name }}</span>
@@ -44,11 +48,12 @@ const userName = user.username[0].toUpperCase() + user.username.slice(1);
   margin-left: 20px;
 }
 
-img {
+.infoContainer img {
   height: 100px;
   width: 100px;
   object-fit: cover;
   border-radius: 50%;
+  cursor: pointer;
 }
 
 @media (max-width: 1000px) {
