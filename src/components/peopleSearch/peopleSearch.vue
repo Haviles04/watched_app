@@ -39,6 +39,8 @@ const filteredUsers = computed(() =>
     : allUserData.value
 );
 
+console.log(searchTerm.value);
+
 onMounted(() => {
   getAllUserData();
 });

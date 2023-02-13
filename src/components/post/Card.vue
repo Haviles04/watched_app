@@ -76,9 +76,8 @@ onMounted(() => {
             <p>- {{ post.created_at.slice(0, 10) }}</p>
           </div>
           <v-rating v-model="post.rating" readonly></v-rating>
-          <div class="capRat">
+          <div class="cap">
             <span>"{{ post.caption }}"</span>
-            <div class="text-center"></div>
           </div>
           <CommentLike
             :post="post"
@@ -143,7 +142,7 @@ h3 {
   margin-left: 10px;
 }
 
-.capRat {
+.cap {
   margin-top: 10px;
   width: 100%;
   height: 100%;

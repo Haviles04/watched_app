@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import blank from "@/assets/blank.jpg";
 const { cast } = defineProps(["cast"]);
 </script>
 
@@ -10,7 +11,12 @@ const { cast } = defineProps(["cast"]);
         <div class="castMember" v-for="member in cast">
           <p>{{ member.name }}</p>
           <img
-            :src="`https://image.tmdb.org/t/p/w200/${member.profile_path}`"
+            :src="
+              member.profile_path
+                ? `https://image.tmdb.org/t/p/w200/${member.profile_path}`
+                : blank
+            "
+            :alt="member.name"
           />
         </div>
       </div>
@@ -49,5 +55,6 @@ const { cast } = defineProps(["cast"]);
 
 .castMember img {
   width: 100px;
+  min-height: 150px;
 }
 </style>

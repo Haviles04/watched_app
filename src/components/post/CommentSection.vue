@@ -78,7 +78,7 @@ onMounted(() => {
       </form>
     </div>
     <div class="commentContainer">
-      <div v-for="comment in postComments" class="comment">
+      <div v-for="comment in postComments" class="comment" :key="comment.id">
         <img
           :src="`${VITE_USERPHOTO_URL}/${comment.commenter_photo}`"
           @click="router.push(`/users/${comment.commenter_username}`)"
@@ -101,10 +101,6 @@ onMounted(() => {
   width: 100%;
   padding: 10px;
   display: flex;
-}
-
-.commentContainer {
-  border-top: 1px solid #dddfe1;
 }
 
 .commentWords {
