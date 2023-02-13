@@ -159,9 +159,10 @@ onMounted(() => {
 }
 .cardContainer {
   margin: 0 auto;
-  max-width: 1400px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-items: center;
   gap: 0px;
 }
