@@ -27,7 +27,7 @@ const userImage = user.value?.photo
 
 const handleAddComment = async () => {
   try {
-    const response = await supabase.from("posts_comments").insert({
+    await supabase.from("posts_comments").insert({
       post_id: post.id,
       commenter_id: user.value!.id,
       comment: newComment.value,
