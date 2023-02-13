@@ -55,7 +55,6 @@ const fetchComments = async () => {
       .select()
       .eq("post_id", post.id);
     postComments.value = response.data;
-    console.log(postComments.value);
   } catch {
     error.value = true;
   } finally {

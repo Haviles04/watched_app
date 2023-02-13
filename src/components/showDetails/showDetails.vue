@@ -15,22 +15,29 @@ const error = ref(false);
 const similar = ref();
 
 const fetchData = async () => {
-  const data = await fetch(
-    `https://api.themoviedb.org/3/${mediaType}/${id}?api_key=${VITE_MOVIEDB_API_KEY}`
-  )
-    .then((r) => r.json())
-    .catch();
-
-  showDetails.value = data;
-  showMediaType.value = mediaType;
+  try {
+    const data = await fetch(
+      `https://api.themoviedb.org/3/${mediaType}/${id}?api_key=${VITE_MOVIEDB_API_KEY}`
+    ).then((r) => r.json());
+    showDetails.value = data;
+    showMediaType.value = mediaType;
+    fetchCastData();
+  } catch {
+    error.value = true;
+  }
 };
 
 const fetchCastData = async () => {
-  const data = await fetch(`
-https://api.themoviedb.org/3/${mediaType}/${id}/credits?api_key=${VITE_MOVIEDB_API_KEY}&language=en-US`)
-    .then((r) => r.json())
-    .catch(() => (error.value = true));
-  cast.value = data.cast.slice(0, 6);
+  try {
+    const data = await fetch(`
+https://api.themoviedb.org/3/${mediaType}/${id}/credits?api_key=${VITE_MOVIEDB_API_KEY}&language=en-US`).then(
+      (r) => r.json()
+    );
+    cast.value = data.cast.slice(0, 6);
+    fetchSimilar();
+  } catch {
+    error.value = true;
+  }
 };
 
 const fetchSimilar = async () => {
@@ -48,8 +55,6 @@ const fetchSimilar = async () => {
 
 onMounted(() => {
   fetchData();
-  fetchCastData();
-  fetchSimilar();
 });
 </script>
 

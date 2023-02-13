@@ -42,49 +42,51 @@ onBeforeMount(() => checkIfWatched());
 </script>
 
 <template>
-  <div
-    class="container"
-    :style="{
-      backgroundImage: `url(https://image.tmdb.org/t/p/original/${showDetails.backdrop_path})`,
-    }"
-  >
-    <div class="overlay"></div>
-    <img class="mainImage" :src="detailimage" alt="title" />
-    <div class="title">
-      <div>
-        <h1>{{ title }}</h1>
-        <p class="tagline">{{ showDetails.tagline }}</p>
-        <div class="mainView">
-          <h3>Overview</h3>
-          <p>{{ showDetails.overview }}</p>
-          <AddWatched
-            v-if="!watched"
-            :id="showDetails.id"
-            :name="title"
-            :image="detailimage"
-            :mediaType="mediaType"
-            textColor="white"
-            @setWatched="watched = true"
-          />
+  <section>
+    <div
+      class="container"
+      :style="{
+        backgroundImage: `url(https://image.tmdb.org/t/p/original/${showDetails.backdrop_path})`,
+      }"
+    >
+      <div class="overlay"></div>
+      <img class="mainImage" :src="detailimage" alt="title" />
+      <div class="title">
+        <div>
+          <h1>{{ title }}</h1>
+          <p class="tagline">{{ showDetails.tagline }}</p>
+          <div class="mainView">
+            <h3>Overview</h3>
+            <p>{{ showDetails.overview }}</p>
+            <AddWatched
+              v-if="!watched"
+              :id="showDetails.id"
+              :name="title"
+              :image="detailimage"
+              :mediaType="mediaType"
+              textColor="white"
+              @setWatched="watched = true"
+            />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="mobileView">
-    <h3>Overview</h3>
-    <p>{{ showDetails.overview }}</p>
-    <AddWatched
-      v-if="!watched"
-      :id="showDetails.id"
-      :name="title"
-      :mediaType="showDetails.media_type"
-      :image="detailimage"
-      textColor="white"
-    />
-  </div>
-  <CastDetails :cast="cast" v-if="cast" />
-  <OtherDetails :showDetails="showDetails" />
-  <Recommended :similar="similar" v-if="similar" :mediaType="mediaType" />
+    <div class="mobileView">
+      <h3>Overview</h3>
+      <p>{{ showDetails.overview }}</p>
+      <AddWatched
+        v-if="!watched"
+        :id="showDetails.id"
+        :name="title"
+        :mediaType="showDetails.media_type"
+        :image="detailimage"
+        textColor="white"
+      />
+    </div>
+    <CastDetails :cast="cast" v-if="cast" />
+    <OtherDetails :showDetails="showDetails" />
+    <Recommended :similar="similar" v-if="similar" :mediaType="mediaType" />
+  </section>
 </template>
 
 <style scoped>
