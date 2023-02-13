@@ -13,21 +13,21 @@ const searchedItems = ref<any[]>();
 const loading = ref(false);
 const pageNumber = ref(1);
 const error = ref(false);
-const totalPages = ref();
+const totalPages = ref<Number>(0);
 
 let searchTimeout: any;
 
 const handleChange = (): void => {
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
+    pageNumber.value = 1;
     searchedItems.value = undefined;
     fetchData();
   }, 300);
 };
 
 const handleClick = (dir: string) => {
-  pageNumber.value =
-    dir === "next" ? (pageNumber.value += 1) : (pageNumber.value -= 1);
+  dir === "next" ? pageNumber.value++ : pageNumber.value--;
   fetchData();
 };
 
