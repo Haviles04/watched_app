@@ -84,6 +84,7 @@ onMounted(() => checkIfWatched());
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 5px 5px 5px #778da9;
 }
 
 .img {
