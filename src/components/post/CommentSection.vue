@@ -34,9 +34,14 @@ const handleAddComment = async () => {
       commenter_photo: user.value!.photo,
       commenter_username: user.value!.userName,
     });
-
+    postComments.value.unshift({
+      comment: newComment.value,
+      commenter_id: user.value!.id,
+      commenter_photo: user.value!.photo,
+      commenter_username: user.value!.userName,
+      post_id: post.id,
+    });
     newComment.value = "";
-    fetchComments();
   } catch {
     error.value = true;
   }
@@ -50,6 +55,7 @@ const fetchComments = async () => {
       .select()
       .eq("post_id", post.id);
     postComments.value = response.data;
+    console.log(postComments.value);
   } catch {
     error.value = true;
   } finally {
@@ -98,6 +104,7 @@ onMounted(() => {
   padding-top: 10px;
 }
 .comment {
+  border-top: 1px solid #dddfe183;
   width: 100%;
   padding: 10px;
   display: flex;
