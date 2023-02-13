@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { supabase } from "@/supabase";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
-import TimelineCard from "./TimelineCard.vue";
+import Card from "../post/Card.vue";
 import TimelineSearch from "./TimelineSearch.vue";
 import Loading from "../Loading.vue";
 import Error from "../Error.vue";
@@ -46,13 +46,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="!error">
+  <div class="container" v-if="!error">
     <TimelineSearch />
     <div class="emptyPost" v-if="emptyPost">
       <span>Add Friends to see what they have watched!</span>
     </div>
     <div v-if="!loading" class="cardContainer">
-      <TimelineCard v-for="post in posts" :post="post" />
+      <Card v-for="post in posts" :post="post" />
     </div>
     <div v-else><Loading /></div>
   </div>
@@ -64,9 +64,10 @@ onMounted(() => {
 <style scoped>
 .cardContainer {
   margin: 0 auto;
-  max-width: 1400px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-items: center;
   gap: 5px;
 }

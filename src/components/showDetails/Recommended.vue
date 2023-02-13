@@ -10,6 +10,7 @@ const { similar, mediaType } = defineProps(["similar", "mediaType"]);
       <h1>More Like This...</h1>
       <div class="cardContainer">
         <SmallCard
+          :key="show.id"
           v-for="show in similar"
           :details="show"
           type="similar"

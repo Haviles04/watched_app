@@ -5,7 +5,7 @@ import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
 import { supabase } from "@/supabase";
 import blank from "@/assets/blank.jpg";
-import TimelineCard from "../timeline/TimelineCard.vue";
+import Card from "../post/Card.vue";
 import Loading from "../Loading.vue";
 import Error from "../Error.vue";
 
@@ -137,7 +137,7 @@ onMounted(() => {
         <span>This user hasn't watched anything yet</span>
       </div>
       <div class="cardContainer">
-        <TimelineCard v-for="post in posts" :post="post" />
+        <Card v-for="post in posts" :post="post" />
       </div>
     </div>
     <div v-else>

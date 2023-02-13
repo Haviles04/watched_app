@@ -11,7 +11,7 @@ const handleClick = () => {
 <template>
   <div class="container">
     <h1>Oops!</h1>
-    <p>The person or show you are searching for may not exist!</p>
+    <p>Something went wrong!</p>
     <p>Please try again later</p>
     <button @click="handleClick">Go home!</button>
   </div>

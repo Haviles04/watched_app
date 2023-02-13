@@ -25,7 +25,9 @@ onMounted(async () => {
         type="text"
         placeholder="Search by username..."
       />
-      <button>Search <v-icon icon="mdi-magnify" size="large"></v-icon></button>
+      <button :disabled="searchTerm ? false : true">
+        <v-icon icon="mdi-magnify" size="large"></v-icon>
+      </button>
     </form>
   </div>
 </template>
@@ -36,19 +38,19 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 button {
   background-color: white;
   border: 1px solid black;
-  border-radius: 5px;
-  padding: 5px;
-  margin-top: 10px;
+  border-radius: 0 10px 10px 0;
+  border-left: 0;
+  padding: 8px;
 }
 
 form {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -61,7 +63,7 @@ form {
   max-width: 300px;
   width: 100%;
   border: 1px solid black;
-  border-radius: 10px;
+  border-radius: 10px 0 0 10px;
   background-color: white;
   margin-left: 10px;
 }
