@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import { RouterView, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
@@ -41,7 +41,7 @@ const checkIsOnMobile = () => {
         class="drawer"
         v-model="drawer"
         :rail="rail"
-        :width="isMobile.matches ? '300' : '256'"
+        :width="isMobile.matches ? '350' : '256'"
         permanent
         :location="isMobile.matches ? 'bottom' : 'left'"
       >
@@ -53,11 +53,7 @@ const checkIsOnMobile = () => {
           @click="rail = false"
         >
           <template v-slot:append>
-            <a
-              class="btn"
-              variant="text"
-              @click="router.push(`/users/${user?.userName}`)"
-            >
+            <a class="btn" variant="text">
               {{ user?.userName }}
             </a>
             <v-btn
@@ -73,22 +69,40 @@ const checkIsOnMobile = () => {
         <v-list density="compact" nav class="nav">
           <div>
             <v-list-item
+              prepend-icon="mdi-card-account-details"
+              title="My Profile"
+              value="myProfile"
+              @click="
+                router.push(`/users/${user?.userName}`);
+                if (isMobile) rail = true;
+              "
+            ></v-list-item>
+            <v-list-item
               prepend-icon="mdi-timeline"
               title="Timeline"
               value="Timeline"
-              @click="router.push('/')"
+              @click="
+                router.push('/');
+                if (isMobile) rail = true;
+              "
             ></v-list-item>
             <v-list-item
               prepend-icon="mdi-movie-search"
               title="Search Media"
               value="searchMedia"
-              @click="router.push('/find')"
+              @click="
+                router.push('/find');
+                if (isMobile) rail = true;
+              "
             ></v-list-item>
             <v-list-item
               prepend-icon="mdi-account-search"
               title="Search People"
               value="searchPeople"
-              @click="router.push('/users/search')"
+              @click="
+                router.push('/users/search');
+                if (isMobile) rail = true;
+              "
             ></v-list-item>
           </div>
 
@@ -98,7 +112,10 @@ const checkIsOnMobile = () => {
               prepend-icon="mdi-account"
               title="My Account"
               value="Account"
-              @click="router.push('/account')"
+              @click="
+                router.push('/account');
+                if (isMobile) rail = true;
+              "
             ></v-list-item>
 
             <v-list-item
@@ -122,7 +139,6 @@ const checkIsOnMobile = () => {
 }
 
 .btn {
-  cursor: pointer;
   margin-right: 30px;
 }
 
