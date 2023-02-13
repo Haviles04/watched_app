@@ -41,6 +41,7 @@ const checkIsOnMobile = () => {
         class="drawer"
         v-model="drawer"
         :rail="rail"
+        :width="isMobile.matches ? '300' : '256'"
         permanent
         :location="isMobile.matches ? 'bottom' : 'left'"
       >
@@ -130,5 +131,8 @@ const checkIsOnMobile = () => {
   display: flex;
   flex-flow: column;
   justify-content: space-between;
+}
+
+@media (max-width: 625px) {
 }
 </style>
