@@ -2,41 +2,17 @@
 import { ref, onMounted } from "vue";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
-import blank from "@/assets/blank.jpg";
 import { supabase } from "@/supabase";
 
-const { VITE_USERPHOTO_URL } = import.meta.env;
-const { post } = defineProps(["post"]);
-const emit = defineEmits(["refreshComments"]);
+const { post, showAddComment } = defineProps(["post", "showAddComment"]);
+const emit = defineEmits(["toggleshowAddComment"]);
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-const newComment = ref("");
 const liked = ref();
 const likedAmt = ref();
 const error = ref(false);
-
-const userImage = user.value?.photo
-  ? `${VITE_USERPHOTO_URL}${user.value.photo}`
-  : blank;
-
-const handleAddComment = async () => {
-  try {
-    const response = await supabase.from("posts_comments").insert({
-      post_id: post.id,
-      commenter_id: user.value!.id,
-      comment: newComment.value,
-      commenter_photo: user.value!.photo,
-      commenter_username: user.value!.userName,
-    });
-
-    newComment.value = "";
-    emit("refreshComments");
-  } catch {
-    error.value = true;
-  }
-};
 
 const handleLike = async () => {
   try {
@@ -113,17 +89,16 @@ onMounted(() => {
         ><v-icon v-else @click="handleRemoveLike" color="#778da9"
           >mdi-thumb-up</v-icon
         >
+        <v-icon
+          v-if="!showAddComment"
+          @click="emit('toggleshowAddComment')"
+          color="#778da9"
+          >mdi-comment-plus-outline</v-icon
+        >
+        <v-icon v-else @click="emit('toggleshowAddComment')" color="#778da9"
+          >mdi-comment-minus-outline</v-icon
+        >
       </div>
-    </div>
-    <div class="addComment">
-      <img :src="userImage" />
-      <form @submit.prevent="handleAddComment">
-        <input
-          v-model="newComment"
-          type="text"
-          placeholder="Add a comment..."
-        />
-      </form>
     </div>
   </div>
 </template>
@@ -156,32 +131,6 @@ onMounted(() => {
 
 .likeBar i {
   cursor: pointer;
-}
-
-.addComment {
-  display: flex;
-  align-items: center;
-}
-
-.addComment form {
-  width: 100%;
-}
-
-.addComment input {
-  display: flex;
-  flex-grow: 1;
-  margin-left: 10px;
-  padding: 10px;
-  width: 80%;
-  background-color: #dddfe1;
-  border-radius: 10px;
-  outline: none;
-}
-
-.addComment img {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 50%;
+  margin-right: 10px;
 }
 </style>

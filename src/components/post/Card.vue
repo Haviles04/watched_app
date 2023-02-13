@@ -23,7 +23,7 @@ const postUser = ref<postUser>();
 const userImage = ref<string>();
 const loading = ref<boolean>(true);
 const error = ref(false);
-const postComments = ref();
+const showAddComment = ref(false);
 
 const fetchUserData = async () => {
   loading.value = true;
@@ -41,24 +41,12 @@ const fetchUserData = async () => {
   } catch {
     error.value = true;
   } finally {
-    fetchComments();
     loading.value = false;
   }
 };
 
-const fetchComments = async () => {
-  loading.value = true;
-  try {
-    const response = await supabase
-      .from("posts_comments")
-      .select()
-      .eq("post_id", post.id);
-    postComments.value = response.data;
-  } catch {
-    error.value = true;
-  } finally {
-    loading.value = false;
-  }
+const toggleshowAddComment = () => {
+  showAddComment.value = !showAddComment.value;
 };
 
 onMounted(() => {
@@ -92,13 +80,14 @@ onMounted(() => {
             <span>"{{ post.caption }}"</span>
             <div class="text-center"></div>
           </div>
-          <CommentLike :post="post" @refreshComments="fetchComments" />
+          <CommentLike
+            :post="post"
+            :showAddComment="showAddComment"
+            @toggleshowAddComment="toggleshowAddComment"
+          />
         </div>
       </div>
-      <CommentSection
-        :postComments="postComments"
-        v-if="postComments.length > 0"
-      />
+      <CommentSection :post="post" :showAddComment="showAddComment" />
     </div>
     <div v-else class="loading">
       <Loading />
@@ -192,6 +181,10 @@ h3 {
   .postInfo {
     flex-direction: column;
     align-items: center;
+  }
+
+  .postDetails {
+    margin: 0;
   }
 
   .container {
