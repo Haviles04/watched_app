@@ -33,10 +33,10 @@ const fetchData = async () => {
 
     posts.value = postsData!;
     emptyPost.value = posts.value.length < 1;
-    loading.value = false;
   } catch {
-    loading.value = false;
     error.value = true;
+  } finally {
+    loading.value = false;
   }
 };
 

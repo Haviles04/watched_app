@@ -44,10 +44,10 @@ const fetchData = async () => {
     ).then((r) => r.json());
     searchedItems.value = data.results;
     totalPages.value = data.total_pages;
-    loading.value = false;
   } catch {
-    loading.value = false;
     error.value = true;
+  } finally {
+    loading.value = false;
   }
 };
 </script>

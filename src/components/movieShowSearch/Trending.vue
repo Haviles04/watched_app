@@ -8,27 +8,34 @@ const { VITE_MOVIEDB_API_KEY } = import.meta.env;
 const trendingMovies = ref();
 const trendingTv = ref();
 const loading = ref(false);
+const error = ref(false);
 
 const fetchMovies = async () => {
   loading.value = true;
-  const { results } = await fetch(
-    `https://api.themoviedb.org/3/trending/movie/day?api_key=${VITE_MOVIEDB_API_KEY}`
-  )
-    .then((r) => r.json())
-    .catch((err) => console.log(err));
-  trendingMovies.value = results.slice(0, 6);
-  loading.value = false;
+  try {
+    const { results } = await fetch(
+      `https://api.themoviedb.org/3/trending/movie/day?api_key=${VITE_MOVIEDB_API_KEY}`
+    ).then((r) => r.json());
+    trendingMovies.value = results.slice(0, 6);
+  } catch {
+    error.value = true;
+  } finally {
+    loading.value = false;
+  }
 };
 
 const fetchTv = async () => {
   loading.value = true;
-  const { results } = await fetch(
-    `https://api.themoviedb.org/3/trending/tv/day?api_key=${VITE_MOVIEDB_API_KEY}`
-  )
-    .then((r) => r.json())
-    .catch((err) => console.log(err));
-  trendingTv.value = results.slice(0, 6);
-  loading.value = false;
+  try {
+    const { results } = await fetch(
+      `https://api.themoviedb.org/3/trending/tv/day?api_key=${VITE_MOVIEDB_API_KEY}`
+    ).then((r) => r.json());
+    trendingTv.value = results.slice(0, 6);
+  } catch {
+    error.value = true;
+  } finally {
+    loading.value = false;
+  }
 };
 
 onBeforeMount(() => {
@@ -39,6 +46,7 @@ onBeforeMount(() => {
 
 <template>
   <h1>Trending Movies</h1>
+  <h2 v-if="error">Oops! Something went wrong!</h2>
   <div class="container" v-if="!loading">
     <ResultsCard
       class="card"
@@ -57,6 +65,7 @@ onBeforeMount(() => {
   </div>
   <div class="loading" v-else><Loading /></div>
   <h1>Trending Tv</h1>
+  <h2 v-if="error">Oops! Something went wrong!</h2>
   <div class="container" v-if="!loading">
     <ResultsCard
       class="card"

@@ -61,28 +61,38 @@ const getUserInfo = async () => {
 
     getPost();
     checkIsFollowing();
+  } catch {
+    pageError.value = true;
+  } finally {
     loading.value = false;
+  }
+};
+
+const followUser = async () => {
+  try {
+    const { data } = await supabase.from("follower_following").insert({
+      follower_id: user.value?.id,
+      following_id: pageUser.value?.id,
+    });
+
+    following.value = true;
   } catch {
     pageError.value = true;
   }
 };
 
-const followUser = async () => {
-  const { data } = await supabase
-    .from("follower_following")
-    .insert({ follower_id: user.value?.id, following_id: pageUser.value?.id });
-
-  following.value = true;
-};
-
 const unFollowUser = async () => {
-  const { data } = await supabase
-    .from("follower_following")
-    .delete()
-    .eq("follower_id", user.value?.id)
-    .eq("following_id", pageUser.value?.id);
+  try {
+    const { data } = await supabase
+      .from("follower_following")
+      .delete()
+      .eq("follower_id", user.value?.id)
+      .eq("following_id", pageUser.value?.id);
 
-  following.value = false;
+    following.value = false;
+  } catch {
+    pageError.value = true;
+  }
 };
 
 const checkIsFollowing = async () => {
