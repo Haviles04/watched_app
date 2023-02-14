@@ -58,7 +58,13 @@ const checkIsOnMobile = () => {
             </a>
             <v-btn
               variant="text"
-              :icon="isMobile.matches ? 'mdi-chevron-down' : 'mdi-chevron-left'"
+              :icon="
+                isMobile.matches
+                  ? rail === false
+                    ? 'mdi-chevron-down'
+                    : 'mdi-chevron-up'
+                  : 'mdi-chevron-left'
+              "
               @click.stop="rail = !rail"
             ></v-btn>
           </template>
