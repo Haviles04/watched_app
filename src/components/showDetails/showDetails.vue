@@ -59,20 +59,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="!error">
-    <div v-if="showDetails">
-      <MainCard
-        :showDetails="showDetails"
-        :mediaType="showMediaType"
-        :cast="cast"
-        :similar="similar"
-      />
-    </div>
-    <div v-else>
-      <Loading />
-    </div>
-  </div>
-  <div v-else>
-    <Error />
-  </div>
+  <div v-if="error"><Error /></div>
+  <div v-else-if="!showDetails"><Loading /></div>
+  <MainCard
+    v-else-if="showDetails"
+    :showDetails="showDetails"
+    :mediaType="showMediaType"
+    :cast="cast"
+    :similar="similar"
+  />
 </template>
