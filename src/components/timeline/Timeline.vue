@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { supabase } from "@/supabase";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
@@ -7,16 +7,29 @@ import Card from "../post/Card.vue";
 import TimelineSearch from "./TimelineSearch.vue";
 import Loading from "../Loading.vue";
 import Error from "../Error.vue";
+import Observer from "./Observer.vue";
+
+interface Post {
+  caption?: string;
+  id: number;
+  media_type: string;
+  name: string;
+  ownerid: number;
+  rating?: number;
+  show_id: number;
+  show_image?: string;
+}
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-const posts = ref<{}[]>();
+const posts = ref<Post[]>([]);
 const loading = ref(false);
-const emptyPost = ref(true);
 const error = ref(false);
+const startI = ref(0);
+const endI = ref(5);
+const allLoaded = ref(false);
 
 const fetchData = async () => {
-  loading.value = true;
   try {
     const { data: following } = await supabase
       .from("follower_following")
@@ -29,15 +42,30 @@ const fetchData = async () => {
       .from("post")
       .select()
       .in("owner_id", ownerIds!)
+      .range(startI.value, endI.value)
       .order("created_at", { ascending: false });
 
-    posts.value = postsData!;
-    emptyPost.value = posts.value.length < 1;
+    posts.value = [...posts.value!].concat(postsData!);
+
+    if (!postsData!.length) {
+      allLoaded.value = true;
+    }
   } catch {
     error.value = true;
   } finally {
     loading.value = false;
   }
+};
+
+const emptyPost = computed(() => {
+  if (!posts.value) return false;
+});
+
+const fetchIntersectedData = () => {
+  if (allLoaded.value) return;
+  startI.value += 6;
+  endI.value += 6;
+  fetchData();
 };
 
 onMounted(() => {
@@ -46,18 +74,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container" v-if="!error">
+  <div v-if="loading"><Loading /></div>
+  <div v-if="error"><Error /></div>
+  <div class="container">
     <TimelineSearch />
     <div class="emptyPost" v-if="emptyPost">
       <h1>Add Friends to see what they have watched!</h1>
     </div>
-    <div v-if="!loading" class="cardContainer">
-      <Card v-for="post in posts" :post="post" />
+    <div class="cardContainer">
+      <Card v-for="post in posts" :post="post" :key="post.id" />
+      <Observer @intersect="fetchIntersectedData" v-if="posts.length!" />
     </div>
-    <div v-else><Loading /></div>
-  </div>
-  <div v-else>
-    <Error />
   </div>
 </template>
 
