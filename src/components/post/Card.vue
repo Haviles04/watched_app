@@ -60,7 +60,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div v-if="loading"><Loading /></div>
+  <div class="container" v-if="loading"><Loading /></div>
   <div v-else-if="error"><Error /></div>
   <div v-else-if="!removePost" class="container">
     <div class="postInfo">
