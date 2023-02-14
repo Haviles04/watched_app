@@ -69,14 +69,15 @@ const fetchIntersectedData = () => {
 };
 
 onMounted(() => {
+  loading.value = true;
   fetchData();
 });
 </script>
 
 <template>
   <div v-if="loading"><Loading /></div>
-  <div v-if="error"><Error /></div>
-  <div class="container">
+  <div v-else-if="error"><Error /></div>
+  <div v-else class="container">
     <TimelineSearch />
     <div class="emptyPost" v-if="emptyPost">
       <h1>Add Friends to see what they have watched!</h1>
