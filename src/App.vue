@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { RouterView, useRouter } from "vue-router";
 import { useUserStore } from "./stores/users";
@@ -10,7 +10,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const { user, loading } = storeToRefs(userStore);
 
-onBeforeMount(async () => {
+onMounted(async () => {
   await userStore.getUser();
   if (!user.value) {
     router.push("/login");
