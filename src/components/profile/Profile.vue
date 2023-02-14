@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onBeforeMount, reactive, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
@@ -9,6 +9,14 @@ import Card from "../post/Card.vue";
 import Loading from "../Loading.vue";
 import Error from "../Error.vue";
 
+interface PageUser {
+  id: number;
+  username?: string;
+  photo?: string;
+  followers?: number;
+  following?: number;
+}
+
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
@@ -16,14 +24,13 @@ const route = useRoute();
 const { userName } = route.params;
 
 const posts = ref<{}[]>();
-const userImage = ref("");
-const pageUser = ref<{ id: number }>();
 const currentUser = ref(user.value?.userName === userName);
 const following = ref<boolean>();
 const pageError = ref(false);
 const emptyPosts = ref(false);
 const loading = ref<boolean>();
 const { VITE_USERPHOTO_URL } = import.meta.env;
+const pageUser = reactive<PageUser>({ id: 0 });
 
 const getPost = async () => {
   if (pageError.value) return;
@@ -55,14 +62,17 @@ const getUserInfo = async () => {
       .select()
       .eq("username", userName)
       .single();
-    pageUser.value = userData;
 
-    userData.photo
-      ? (userImage.value = `${VITE_USERPHOTO_URL}${userData.photo}`)
-      : (userImage.value = blank);
+    pageUser.id = userData.id;
+    pageUser.username =
+      userData.username[0].toUpperCase() + userData.username.slice(1);
 
-    getPost();
-    checkIsFollowing();
+    pageUser.photo = userData.photo;
+
+    await getPost();
+    await checkIsFollowing();
+    await fetchFollowers();
+    await fetchFollowing();
   } catch {
     pageError.value = true;
   } finally {
@@ -72,9 +82,9 @@ const getUserInfo = async () => {
 
 const followUser = async () => {
   try {
-    const { data } = await supabase.from("follower_following").insert({
+    await supabase.from("follower_following").insert({
       follower_id: user.value?.id,
-      following_id: pageUser.value?.id,
+      following_id: pageUser.id,
     });
 
     following.value = true;
@@ -85,11 +95,11 @@ const followUser = async () => {
 
 const unFollowUser = async () => {
   try {
-    const { data } = await supabase
+    await supabase
       .from("follower_following")
       .delete()
       .eq("follower_id", user.value?.id)
-      .eq("following_id", pageUser.value?.id);
+      .eq("following_id", pageUser.id);
 
     following.value = false;
   } catch {
@@ -105,7 +115,7 @@ const checkIsFollowing = async () => {
       .from("follower_following")
       .select()
       .eq("follower_id", user.value?.id)
-      .eq("following_id", pageUser.value?.id);
+      .eq("following_id", pageUser.id);
     if (data!.length > 0) following.value = true;
   } catch {
     following.value = false;
@@ -113,21 +123,58 @@ const checkIsFollowing = async () => {
   loading.value = false;
 };
 
-onMounted(() => {
+const fetchFollowers = async () => {
+  try {
+    const { data } = await supabase
+      .from("follower_following")
+      .select()
+      .eq("following_id", pageUser.id);
+
+    pageUser.followers = data!.length;
+  } catch {
+    pageError.value = true;
+  }
+};
+
+const fetchFollowing = async () => {
+  try {
+    const { data } = await supabase
+      .from("follower_following")
+      .select()
+      .eq("follower_id", pageUser.id);
+
+    pageUser.following = data!.length;
+  } catch {
+    pageError.value = true;
+  }
+};
+
+onBeforeMount(() => {
   getUserInfo();
 });
 </script>
 
 <template>
   <div v-if="loading"><Loading /></div>
-  <div v-if="pageError"><Error /></div>
-  <div v-if="!pageError && !loading">
+  <div v-else-if="pageError"><Error /></div>
+  <div v-else>
     <div class="userBar">
       <div class="userInfo">
         <div class="userImage">
-          <img :src="userImage" />
+          <img
+            :src="
+              pageUser.photo ? `${VITE_USERPHOTO_URL}${pageUser.photo}` : blank
+            "
+            :alt="pageUser.username"
+          />
         </div>
-        <h1>{{ userName }}</h1>
+        <div class="userName">
+          <h1>{{ pageUser.username }}</h1>
+          <div class="follow">
+            <p>{{ pageUser.followers }} Followers</p>
+            <p>{{ pageUser.following }} Following</p>
+          </div>
+        </div>
       </div>
       <v-btn v-if="!currentUser && !following" class="btn" @click="followUser"
         >Follow</v-btn
@@ -163,11 +210,6 @@ onMounted(() => {
   margin: 0 auto;
 }
 
-@media (max-width: 1400px) {
-  .cardContainer {
-    grid-template-columns: 1fr;
-  }
-}
 .userBar {
   margin: 10px auto;
   max-width: 900px;
@@ -179,6 +221,13 @@ onMounted(() => {
   border-radius: 10px;
   padding: 10px;
   color: white;
+}
+
+.userName {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn {
@@ -205,33 +254,14 @@ onMounted(() => {
 .userInfo h1 {
   margin-left: 20px;
 }
-.watched {
-  margin: 20px auto;
-  display: flex;
-  max-width: 900px;
-  max-height: 300px;
-  display: flex;
-  padding: 10px;
-  border: 2px solid gray;
-  border-radius: 10px;
-  box-shadow: 2px 2px 2px gray;
-}
 
-.watched img {
-  height: 200px;
-  object-fit: contain;
-}
+@media (max-width: 625px) {
+  .userBar {
+    flex-direction: column;
+  }
 
-.postDetails {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-left: 25px;
-}
-
-.loading {
-  margin-top: 50px;
+  .btn {
+    margin-top: 20px;
+  }
 }
 </style>
