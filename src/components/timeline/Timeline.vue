@@ -12,7 +12,7 @@ const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const posts = ref<{}[]>();
 const loading = ref(false);
-const emptyPost = ref(false);
+const emptyPost = ref(true);
 const error = ref(false);
 
 const fetchData = async () => {
@@ -49,7 +49,7 @@ onMounted(() => {
   <div class="container" v-if="!error">
     <TimelineSearch />
     <div class="emptyPost" v-if="emptyPost">
-      <span>Add Friends to see what they have watched!</span>
+      <h1>Add Friends to see what they have watched!</h1>
     </div>
     <div v-if="!loading" class="cardContainer">
       <Card v-for="post in posts" :post="post" />
