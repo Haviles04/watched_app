@@ -6,6 +6,7 @@ import ShowDetailsView from "@/views/ShowDetailsView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import AccountView from "@/views/AccountView.vue";
 import PeopleSearchView from "@/views/PeopleSearchView.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,6 +50,11 @@ const router = createRouter({
       path: "/users/search/",
       name: "peopleSearchBlank",
       component: PeopleSearchView,
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "notFound",
+      component: NotFoundView,
     },
   ],
 });
