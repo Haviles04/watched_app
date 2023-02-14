@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onBeforeMount, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { supabase } from "@/supabase";
+import { useUserStore } from "@/stores/users";
+import { storeToRefs } from "pinia";
 import blank from "@/assets/blank.jpg";
 import Loading from "../Loading.vue";
 import CommentLike from "./CommentLike.vue";
@@ -17,13 +19,15 @@ interface postUser {
   username?: string;
   photo?: string;
 }
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 const { post } = defineProps(["post"]);
 const postUser = ref<postUser>();
-const userImage = ref<string>();
 const loading = ref<boolean>(true);
 const error = ref(false);
 const showAddComment = ref(false);
+const removePost = ref(false);
 
 const fetchUserData = async () => {
   loading.value = true;
@@ -35,9 +39,6 @@ const fetchUserData = async () => {
       .eq("id", post.owner_id)
       .single();
     postUser.value! = userData;
-    userImage.value = postUser.value?.photo
-      ? `${VITE_USERPHOTO_URL}${postUser.value.photo}`
-      : blank;
   } catch {
     error.value = true;
   } finally {
@@ -45,55 +46,59 @@ const fetchUserData = async () => {
   }
 };
 
+const removePostFromScreen = () => {
+  removePost.value = true;
+};
+
 const toggleshowAddComment = () => {
   showAddComment.value = !showAddComment.value;
 };
 
-onMounted(() => {
+onBeforeMount(() => {
   fetchUserData();
 });
 </script>
 
 <template>
-  <div class="container" v-if="!error">
-    <div v-if="!loading">
-      <div class="postInfo">
-        <div class="showImage">
-          <img
-            :src="post.show_image"
-            @click="router.push(`/${post.media_type}/${post.show_id}`)"
-          />
-        </div>
-        <div class="postDetails">
-          <div
-            class="userBar"
-            @click="router.push(`/users/${postUser?.username}`)"
-          >
-            <div class="userImgContainer">
-              <img class="userImage" :src="userImage" />
-            </div>
-            <h3>{{ postUser!.username }}</h3>
-            <p>- {{ post.created_at.slice(0, 10) }}</p>
-          </div>
-          <v-rating v-model="post.rating" readonly></v-rating>
-          <div class="cap">
-            <span>"{{ post.caption }}"</span>
-          </div>
-          <CommentLike
-            :post="post"
-            :showAddComment="showAddComment"
-            @toggleshowAddComment="toggleshowAddComment"
-          />
-        </div>
+  <div v-if="loading"><Loading /></div>
+  <div v-else-if="error"><Error /></div>
+  <div v-else-if="!removePost" class="container">
+    <div class="postInfo">
+      <div class="showImage">
+        <img
+          :src="post.show_image"
+          @click="router.push(`/${post.media_type}/${post.show_id}`)"
+        />
       </div>
-      <CommentSection :post="post" :showAddComment="showAddComment" />
+      <div class="postDetails">
+        <div
+          class="userBar"
+          @click="router.push(`/users/${postUser?.username}`)"
+        >
+          <div class="userImgContainer">
+            <img
+              class="userImage"
+              :src="postUser!.photo
+      ? `${VITE_USERPHOTO_URL}${postUser!.photo}`
+      : blank"
+            />
+          </div>
+          <h3>{{ postUser!.username }}</h3>
+          <p>- {{ post.created_at.slice(0, 10) }}</p>
+        </div>
+        <v-rating v-model="post.rating" readonly></v-rating>
+        <div class="cap">
+          <span>"{{ post.caption }}"</span>
+        </div>
+        <CommentLike
+          :post="post"
+          :showAddComment="showAddComment"
+          @toggleshowAddComment="toggleshowAddComment"
+          @removePostFromScreen="removePostFromScreen"
+        />
+      </div>
     </div>
-    <div v-else class="loading">
-      <Loading />
-    </div>
-  </div>
-  <div v-else>
-    <Error />
+    <CommentSection :post="post" :showAddComment="showAddComment" />
   </div>
 </template>
 
@@ -139,6 +144,11 @@ onMounted(() => {
 }
 
 h3 {
+  margin-left: 10px;
+}
+
+.userBar button {
+  font-size: 10px;
   margin-left: 10px;
 }
 

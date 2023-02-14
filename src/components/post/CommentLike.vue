@@ -5,10 +5,12 @@ import { storeToRefs } from "pinia";
 import { supabase } from "@/supabase";
 
 const { post, showAddComment } = defineProps(["post", "showAddComment"]);
-const emit = defineEmits(["toggleshowAddComment"]);
+const emit = defineEmits(["toggleshowAddComment", "removePostFromScreen"]);
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
+const currentUser = ref(post.owner_id === user.value!.id);
+const dialog = ref(false);
 
 const liked = ref();
 const likedAmt = ref();
@@ -71,6 +73,17 @@ const getAmtOfLikes = async () => {
   }
 };
 
+const deletePost = async () => {
+  if (user.value!.id !== post.owner_id) return;
+  try {
+    await supabase.from("post").delete().eq("post.id", post.id);
+    emit("removePostFromScreen");
+  } catch {
+    error.value = true;
+  } finally {
+  }
+};
+
 onMounted(() => {
   checkIfLiked();
 });
@@ -98,6 +111,25 @@ onMounted(() => {
         <v-icon v-else @click="emit('toggleshowAddComment')" color="#778da9"
           >mdi-comment-minus-outline</v-icon
         >
+        <v-icon v-if="currentUser" color="#778da9" @click="dialog = true">
+          mdi-delete-outline
+        </v-icon>
+        <v-dialog v-model="dialog" max-width="500">
+          <v-card>
+            <v-card-text> Are you sure you want to delete this? </v-card-text>
+            <v-card-actions>
+              <v-btn
+                color="red"
+                @click="
+                  dialog = false;
+                  deletePost();
+                "
+                >Delete</v-btn
+              >
+              <v-btn color="#778da9" @click="dialog = false">Cancel</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </div>
     </div>
   </div>
