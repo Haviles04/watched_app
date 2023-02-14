@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import placeholderimg from "../../assets/placeholderimg.png";
+import placeholderimg from "@/assets/placeholderimg.png";
 const { details, type, mediaType } = defineProps([
   "details",
   "type",
