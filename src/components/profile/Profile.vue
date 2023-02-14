@@ -88,6 +88,7 @@ const followUser = async () => {
     });
 
     following.value = true;
+    pageUser.followers!++;
   } catch {
     pageError.value = true;
   }
@@ -102,6 +103,7 @@ const unFollowUser = async () => {
       .eq("following_id", pageUser.id);
 
     following.value = false;
+    pageUser.followers!--;
   } catch {
     pageError.value = true;
   }
