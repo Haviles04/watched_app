@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import Error from "../Error.vue";
 import Loading from "../Loading.vue";
-import DetailsCard from "./DetailsCard.vue";
+import MainCard from "./MainCard.vue";
 
 const { VITE_MOVIEDB_API_KEY } = import.meta.env;
 const route = useRoute();
@@ -61,7 +61,7 @@ onMounted(() => {
 <template>
   <div v-if="!error">
     <div v-if="showDetails">
-      <DetailsCard
+      <MainCard
         :showDetails="showDetails"
         :mediaType="showMediaType"
         :cast="cast"

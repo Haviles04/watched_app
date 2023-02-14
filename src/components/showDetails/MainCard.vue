@@ -78,9 +78,10 @@ onBeforeMount(() => checkIfWatched());
         v-if="!watched"
         :id="showDetails.id"
         :name="title"
-        :mediaType="showDetails.media_type"
         :image="detailimage"
+        :mediaType="mediaType"
         textColor="white"
+        @setWatched="watched = true"
       />
     </div>
     <CastDetails :cast="cast" v-if="cast" />
