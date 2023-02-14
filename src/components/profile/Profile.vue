@@ -119,37 +119,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="!pageError">
-    <div v-if="!loading">
-      <div class="userBar">
-        <div class="userInfo">
-          <div class="userImage">
-            <img :src="userImage" />
-          </div>
-          <h1>{{ userName }}</h1>
+  <div v-if="loading"><Loading /></div>
+  <div v-if="pageError"><Error /></div>
+  <div v-if="!pageError && !loading">
+    <div class="userBar">
+      <div class="userInfo">
+        <div class="userImage">
+          <img :src="userImage" />
         </div>
-        <v-btn v-if="!currentUser && !following" class="btn" @click="followUser"
-          >Follow</v-btn
-        >
-        <v-btn v-if="following" class="btn" @click="unFollowUser"
-          >Unfollow</v-btn
-        >
+        <h1>{{ userName }}</h1>
       </div>
-      <div class="emptyPosts" v-if="emptyPosts">
-        <span>This user hasn't watched anything yet</span>
-      </div>
-      <div class="cardContainer">
-        <Card v-for="post in posts" :post="post" />
-      </div>
+      <v-btn v-if="!currentUser && !following" class="btn" @click="followUser"
+        >Follow</v-btn
+      >
+      <v-btn v-if="following" class="btn" @click="unFollowUser">Unfollow</v-btn>
     </div>
-    <div v-else>
-      <div class="loading">
-        <Loading />
-      </div>
+    <div class="emptyPosts" v-if="emptyPosts">
+      <span>This user hasn't watched anything yet</span>
     </div>
-  </div>
-  <div v-else>
-    <Error />
+    <div class="cardContainer">
+      <Card v-for="post in posts" :post="post" />
+    </div>
   </div>
 </template>
 
