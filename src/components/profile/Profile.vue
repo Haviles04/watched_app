@@ -28,7 +28,7 @@ const { VITE_USERPHOTO_URL } = import.meta.env;
 const getPost = async () => {
   if (pageError.value) return;
   try {
-    const { data: userData, error } = await supabase
+    const { data: userData } = await supabase
       .from("users")
       .select()
       .eq("username", userName)
@@ -37,8 +37,10 @@ const getPost = async () => {
     const { data: postData } = await supabase
       .from("post")
       .select()
-      .eq("owner_id", userData.id);
-    posts.value = postData?.reverse();
+      .eq("owner_id", userData.id)
+      .order("created_at", { ascending: false });
+
+    posts.value = postData!;
     emptyPosts.value = posts.value!.length < 1;
   } catch {
     pageError.value = true;
