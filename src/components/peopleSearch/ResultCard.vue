@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 import blank from "@/assets/blank.jpg";
 const { user } = defineProps(["user"]);
