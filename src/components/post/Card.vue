@@ -2,8 +2,6 @@
 import { ref, onBeforeMount, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { supabase } from "@/supabase";
-import { useUserStore } from "@/stores/users";
-import { storeToRefs } from "pinia";
 import blank from "@/assets/blank.jpg";
 import Loading from "../Loading.vue";
 import CommentLike from "./CommentLike.vue";
@@ -19,8 +17,6 @@ interface postUser {
   username?: string;
   photo?: string;
 }
-const userStore = useUserStore();
-const { user } = storeToRefs(userStore);
 
 const { post } = defineProps(["post"]);
 const postUser = ref<postUser>();
