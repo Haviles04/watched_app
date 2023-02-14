@@ -53,7 +53,8 @@ const fetchData = async () => {
 </script>
 
 <template>
-  <div v-if="!error">
+  <div v-if="error"><Error /></div>
+  <div v-else>
     <div class="findContainer">
       <h1>Need Something To Watch?</h1>
       <div class="searchBar">
@@ -100,9 +101,6 @@ const fetchData = async () => {
         <Loading />
       </div>
     </div>
-  </div>
-  <div v-else>
-    <Error />
   </div>
 </template>
 

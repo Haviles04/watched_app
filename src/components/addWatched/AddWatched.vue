@@ -29,8 +29,7 @@ const savePost = async () => {
     loading.value = false;
     return;
   }
-
-  const { data } = await supabase.from("post").insert({
+  await supabase.from("post").insert({
     show_id: id,
     show_image: image,
     caption: thoughts.value,
