@@ -38,12 +38,13 @@ const checkIsOnMobile = () => {
   <v-card>
     <v-layout>
       <v-navigation-drawer
-        class="drawer"
         v-model="drawer"
         :rail="rail"
         :width="isMobile.matches ? '350' : '256'"
         permanent
         :location="isMobile.matches ? 'bottom' : 'left'"
+        touchless
+        class="drawer"
       >
         <v-list-item
           class="user"
@@ -53,9 +54,9 @@ const checkIsOnMobile = () => {
           @click="rail = false"
         >
           <template v-slot:append>
-            <a class="btn" variant="text">
+            <p class="btn" variant="text">
               {{ user?.userName }}
-            </a>
+            </p>
             <v-btn
               variant="text"
               :icon="
@@ -143,7 +144,6 @@ const checkIsOnMobile = () => {
   background-color: rgb(231, 230, 230);
   min-height: 100vh;
 }
-
 .btn {
   margin-right: 30px;
 }
@@ -155,6 +155,7 @@ const checkIsOnMobile = () => {
   justify-content: space-between;
 }
 
-@media (max-width: 625px) {
+.v-navigation-drawer__content {
+  overflow: hidden;
 }
 </style>
