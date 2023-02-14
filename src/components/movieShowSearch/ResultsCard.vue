@@ -22,7 +22,7 @@ const { title, releaseDate, overview, image, mediaType, id } = defineProps([
 const watched = ref();
 
 const checkIfWatched = async () => {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("post")
     .select()
     .eq("owner_id", user.value?.id)
