@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import { supabase } from "@/supabase";
 import ResultCard from "./ResultCard.vue";
@@ -39,6 +39,10 @@ const filteredUsers = computed(() =>
     : allUserData.value
 );
 
+const noResults = computed(() =>
+  !filteredUsers.value ? true : filteredUsers.value!.length ? false : true
+);
+
 onMounted(() => {
   getAllUserData();
 });
@@ -53,6 +57,10 @@ onMounted(() => {
       placeholder="Search for someone.."
     />
     <button></button>
+  </div>
+  <div v-if="noResults" class="noUser">
+    <h2>Ooops!</h2>
+    <p>We couldn't find the person you are looking for!</p>
   </div>
   <div v-if="!error">
     <section>
@@ -82,5 +90,11 @@ onMounted(() => {
   max-width: 1000px;
   display: flex;
   flex-direction: column;
+}
+
+.noUser {
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
 }
 </style>
