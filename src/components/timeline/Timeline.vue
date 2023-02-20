@@ -58,7 +58,7 @@ const fetchData = async () => {
 };
 
 const emptyPost = computed(() => {
-  if (!posts.value) return true;
+  if (!posts.value.length) return true;
 });
 
 const fetchIntersectedData = () => {
