@@ -53,7 +53,7 @@ const handleSubmit = async (e: Event) => {
         autoplay
         loop
         muted
-        playsInline
+        preload="auto"
       />
       <div class="loginForm">
         <img :src="watchedLogo" />
