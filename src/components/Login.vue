@@ -4,6 +4,7 @@ import loginVideo from "@/assets/loginVideo.mp4";
 import watchedLogo from "@/assets/watchedLogo.png";
 import { useUserStore } from "@/stores/users";
 import { storeToRefs } from "pinia";
+import poster from "@/assets/poster.png";
 
 const userStore = useUserStore();
 const { loading, errorMessage } = storeToRefs(userStore);
@@ -53,7 +54,7 @@ const handleSubmit = async (e: Event) => {
         autoplay
         loop
         muted
-        preload="auto"
+        :poster="poster"
       />
       <div class="loginForm">
         <img :src="watchedLogo" />
