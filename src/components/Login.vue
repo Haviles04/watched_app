@@ -47,7 +47,14 @@ const handleSubmit = async (e: Event) => {
 <template>
   <main>
     <div class="container">
-      <video :src="loginVideo" type="video/mp4" autoplay loop muted />
+      <video
+        :src="loginVideo"
+        type="video/mp4"
+        autoplay
+        loop
+        muted
+        playsinline
+      />
       <div class="loginForm">
         <img :src="watchedLogo" />
         <div v-if="!loading">
