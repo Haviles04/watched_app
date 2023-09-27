@@ -17,3 +17,7 @@ VSCODE, Javascript, Typescript, VUE, Pinia, Supabase, Hosted on Netlify
 ## Live site
 
 https://uwatched.netlify.app/
+
+test account 
+username : testertester
+password: test123
