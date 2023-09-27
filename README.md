@@ -19,5 +19,7 @@ VSCODE, Javascript, Typescript, VUE, Pinia, Supabase, Hosted on Netlify
 https://uwatched.netlify.app/
 
 test account 
-username : testertester
+
+email : test@test.com
+
 password: test123
